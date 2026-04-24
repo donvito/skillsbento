@@ -1,0 +1,1066 @@
+<!--
+Stock Analysis Report Template - Interactive HTML
+Replace all {PLACEHOLDER} values with actual data
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{TICKER} Stock Analysis Report</title>
+    <style>
+        :root {
+            --bullish: #10b981;
+            --bearish: #ef4444;
+            --neutral: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --accent: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .ticker-info h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .ticker-badge {
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .price-display {
+            margin-top: 8px;
+        }
+        
+        .current-price {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .price-change {
+            font-size: 1.1rem;
+            margin-left: 12px;
+        }
+        
+        .price-change.positive { color: var(--bullish); }
+        .price-change.negative { color: var(--bearish); }
+        
+        .meta-info {
+            text-align: right;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Signal Badge */
+        .signal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        
+        .signal-badge.bullish {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--bullish);
+            color: var(--bullish);
+        }
+        
+        .signal-badge.bearish {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--bearish);
+            color: var(--bearish);
+        }
+        
+        .signal-badge.neutral {
+            background: rgba(245, 158, 11, 0.2);
+            border: 2px solid var(--neutral);
+            color: var(--neutral);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            padding-bottom: 0;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover {
+            background: var(--bg-card-hover);
+        }
+        
+        /* Signal Indicators */
+        .signal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .signal-dot.bullish { background: var(--bullish); }
+        .signal-dot.bearish { background: var(--bearish); }
+        .signal-dot.neutral { background: var(--neutral); }
+        
+        .score-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .score-pill.positive {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--bullish);
+        }
+        
+        .score-pill.negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--bearish);
+        }
+        
+        .score-pill.zero {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--neutral);
+        }
+        
+        /* Key Levels */
+        .levels-visual {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(to bottom, 
+                rgba(239, 68, 68, 0.1) 0%, 
+                rgba(245, 158, 11, 0.1) 50%, 
+                rgba(16, 185, 129, 0.1) 100%);
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 20px;
+        }
+        
+        .level-line {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .level-line::before {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: currentColor;
+        }
+        
+        .level-label {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .level-line.resistance { color: var(--bearish); }
+        .level-line.current { color: var(--accent); }
+        .level-line.support { color: var(--bullish); }
+        .level-line.stop { color: var(--bearish); border-style: dashed; }
+        .level-line.target { color: var(--bullish); border-style: dashed; }
+        
+        /* Highlight Boxes */
+        .highlight-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .highlight-box.success {
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid var(--bullish);
+        }
+        
+        .highlight-box.danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid var(--bearish);
+        }
+        
+        .highlight-box.warning {
+            background: rgba(245, 158, 11, 0.15);
+            border-left: 4px solid var(--neutral);
+        }
+        
+        .highlight-box.info {
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .highlight-icon {
+            font-size: 1.5rem;
+        }
+        
+        .highlight-content h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        /* Calculator */
+        .calculator {
+            background: var(--bg-card-hover);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .calc-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .calc-input-group label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .calc-input-group input {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            width: 100%;
+        }
+        
+        .calc-input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .calc-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .calc-result-item {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+        }
+        
+        .calc-result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .calc-result-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: var(--bg-card-hover);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* News Items */
+        .news-item {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        
+        .news-headline {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .news-impact {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .news-impact.positive {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--bullish);
+        }
+        
+        .news-impact.negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--bearish);
+        }
+        
+        .news-impact.neutral {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--neutral);
+        }
+        
+        /* Disclaimer */
+        .disclaimer {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 32px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .disclaimer h4 {
+            color: var(--bearish);
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+            }
+            
+            .meta-info {
+                text-align: left;
+            }
+            
+            .ticker-info h1 {
+                font-size: 1.8rem;
+            }
+            
+            .current-price {
+                font-size: 1.5rem;
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+            }
+            
+            .tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="ticker-info">
+            <h1>
+                {TICKER}
+                <span class="ticker-badge">{COMPANY_NAME}</span>
+            </h1>
+            <div class="price-display">
+                <span class="current-price">${CURRENT_PRICE}</span>
+                <span class="price-change {CHANGE_CLASS}">{CHANGE_SIGN}${DAILY_CHANGE} ({CHANGE_SIGN}{DAILY_CHANGE_PCT}%)</span>
+            </div>
+            <div class="signal-badge {BIAS_CLASS}">
+                <span>{BIAS_ICON}</span>
+                <span>{BIAS} • {CONFIDENCE} Confidence</span>
+            </div>
+        </div>
+        <div class="meta-info">
+            <div>Report Generated: {DATE}</div>
+            <div>Data as of: {PRICE_DATE_TIME}</div>
+            <div>Signal Score: <strong>{TOTAL_SCORE}</strong></div>
+        </div>
+    </div>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('summary')">📊 Summary</button>
+        <button class="tab" onclick="showTab('technical')">📈 Technical</button>
+        <button class="tab" onclick="showTab('signals')">🎯 Signals</button>
+        <button class="tab" onclick="showTab('news')">📰 News</button>
+        <button class="tab" onclick="showTab('trade')">💰 Trade Setup</button>
+        <button class="tab" onclick="showTab('calculator')">🧮 Calculator</button>
+    </div>
+    
+    <!-- Summary Tab -->
+    <div id="summary" class="tab-content active">
+        <div class="card">
+            <div class="card-title">📋 Executive Summary</div>
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">{EXECUTIVE_SUMMARY}</p>
+            
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-value" style="color: var(--{BIAS_COLOR})">{BIAS}</div>
+                    <div class="stat-label">Overall Bias</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{CONFIDENCE}</div>
+                    <div class="stat-label">Confidence</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{TOTAL_SCORE}</div>
+                    <div class="stat-label">Signal Score</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{RR_RATIO}</div>
+                    <div class="stat-label">Risk/Reward</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">🎯 Key Levels</div>
+                <table>
+                    <tr>
+                        <td>Resistance 2</td>
+                        <td style="color: var(--bearish); font-weight: 600;">${RESISTANCE_2}</td>
+                    </tr>
+                    <tr>
+                        <td>Resistance 1</td>
+                        <td style="color: var(--bearish); font-weight: 600;">${RESISTANCE_1}</td>
+                    </tr>
+                    <tr style="background: var(--bg-card-hover);">
+                        <td><strong>Current Price</strong></td>
+                        <td style="color: var(--accent); font-weight: 700;">${CURRENT_PRICE}</td>
+                    </tr>
+                    <tr>
+                        <td>Support 1</td>
+                        <td style="color: var(--bullish); font-weight: 600;">${SUPPORT_1}</td>
+                    </tr>
+                    <tr>
+                        <td>Support 2</td>
+                        <td style="color: var(--bullish); font-weight: 600;">${SUPPORT_2}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">⚡ Trade Suggestion</div>
+                <table>
+                    <tr>
+                        <td>Entry Zone</td>
+                        <td style="font-weight: 600;">${ENTRY_LOW} - ${ENTRY_HIGH}</td>
+                    </tr>
+                    <tr>
+                        <td>Stop Loss</td>
+                        <td style="color: var(--bearish); font-weight: 600;">${STOP_LOSS} ({STOP_PCT}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Target 1</td>
+                        <td style="color: var(--bullish); font-weight: 600;">${TARGET_1} (+{T1_PCT}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Target 2</td>
+                        <td style="color: var(--bullish); font-weight: 600;">${TARGET_2} (+{T2_PCT}%)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="highlight-box danger">
+            <span class="highlight-icon">🛑</span>
+            <div class="highlight-content">
+                <h4>Stop Loss Suggestion</h4>
+                <p>Set stop loss at <strong>${STOP_LOSS}</strong> ({STOP_PCT}% below entry). This limits your maximum loss to ${MAX_LOSS_PER_SHARE} per share.</p>
+            </div>
+        </div>
+        
+        <div class="highlight-box success">
+            <span class="highlight-icon">🎯</span>
+            <div class="highlight-content">
+                <h4>Profit Target</h4>
+                <p>Primary target at <strong>${TARGET_1}</strong> (+{T1_PCT}%). Consider taking partial profits here and moving stop to breakeven.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Technical Tab -->
+    <div id="technical" class="tab-content">
+        <div class="card">
+            <div class="card-title">📈 Trend Analysis</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timeframe</th>
+                        <th>Trend</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Intraday</td>
+                        <td><span class="signal-dot {INTRADAY_TREND_CLASS}"></span>{INTRADAY_TREND}</td>
+                        <td>{INTRADAY_DETAILS}</td>
+                    </tr>
+                    <tr>
+                        <td>Short-term (Days)</td>
+                        <td><span class="signal-dot {SHORT_TREND_CLASS}"></span>{SHORT_TREND}</td>
+                        <td>{SHORT_DETAILS}</td>
+                    </tr>
+                    <tr>
+                        <td>Medium-term (Weeks)</td>
+                        <td><span class="signal-dot {MEDIUM_TREND_CLASS}"></span>{MEDIUM_TREND}</td>
+                        <td>{MEDIUM_DETAILS}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">📊 Moving Averages</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MA</th>
+                            <th>Value</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MA20</td>
+                            <td>${MA20}</td>
+                            <td><span class="signal-dot {MA20_CLASS}"></span>{MA20_POSITION}</td>
+                        </tr>
+                        <tr>
+                            <td>MA50</td>
+                            <td>${MA50}</td>
+                            <td><span class="signal-dot {MA50_CLASS}"></span>{MA50_POSITION}</td>
+                        </tr>
+                        <tr>
+                            <td>MA200</td>
+                            <td>${MA200}</td>
+                            <td><span class="signal-dot {MA200_CLASS}"></span>{MA200_POSITION}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🔍 Chart Patterns</div>
+                {PATTERNS_LIST}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📊 Volume Analysis</div>
+            <p>{VOLUME_ANALYSIS}</p>
+        </div>
+    </div>
+    
+    <!-- Signals Tab -->
+    <div id="signals" class="tab-content">
+        <div class="card">
+            <div class="card-title">🎯 Signal Breakdown</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Signal</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trend</td>
+                        <td><span class="signal-dot {TREND_SIGNAL_CLASS}"></span>{TREND_SIGNAL_STATUS}</td>
+                        <td><span class="score-pill {TREND_SCORE_CLASS}">{TREND_SIGNAL_SCORE}</span></td>
+                        <td>{TREND_SIGNAL_NOTES}</td>
+                    </tr>
+                    <tr>
+                        <td>Momentum</td>
+                        <td><span class="signal-dot {MOMENTUM_SIGNAL_CLASS}"></span>{MOMENTUM_SIGNAL_STATUS}</td>
+                        <td><span class="score-pill {MOMENTUM_SCORE_CLASS}">{MOMENTUM_SIGNAL_SCORE}</span></td>
+                        <td>{MOMENTUM_SIGNAL_NOTES}</td>
+                    </tr>
+                    <tr>
+                        <td>Volume</td>
+                        <td><span class="signal-dot {VOLUME_SIGNAL_CLASS}"></span>{VOLUME_SIGNAL_STATUS}</td>
+                        <td><span class="score-pill {VOLUME_SCORE_CLASS}">{VOLUME_SIGNAL_SCORE}</span></td>
+                        <td>{VOLUME_SIGNAL_NOTES}</td>
+                    </tr>
+                    <tr>
+                        <td>Support/Resistance</td>
+                        <td><span class="signal-dot {SR_SIGNAL_CLASS}"></span>{SR_SIGNAL_STATUS}</td>
+                        <td><span class="score-pill {SR_SCORE_CLASS}">{SR_SIGNAL_SCORE}</span></td>
+                        <td>{SR_SIGNAL_NOTES}</td>
+                    </tr>
+                    <tr>
+                        <td>News/Catalyst</td>
+                        <td><span class="signal-dot {NEWS_SIGNAL_CLASS}"></span>{NEWS_SIGNAL_STATUS}</td>
+                        <td><span class="score-pill {NEWS_SCORE_CLASS}">{NEWS_SIGNAL_SCORE}</span></td>
+                        <td>{NEWS_SIGNAL_NOTES}</td>
+                    </tr>
+                    <tr style="background: var(--bg-card-hover); font-weight: 600;">
+                        <td>TOTAL</td>
+                        <td></td>
+                        <td><span class="score-pill {TOTAL_SCORE_CLASS}">{TOTAL_SCORE}</span></td>
+                        <td>{SCORE_INTERPRETATION}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📖 Score Interpretation Guide</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Score Range</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>+6 or higher</td><td><span class="signal-dot bullish"></span>Strong Bullish</td></tr>
+                    <tr><td>+3 to +5</td><td><span class="signal-dot bullish"></span>Bullish</td></tr>
+                    <tr><td>+1 to +2</td><td><span class="signal-dot neutral"></span>Lean Bullish</td></tr>
+                    <tr><td>-1 to +1</td><td><span class="signal-dot neutral"></span>Neutral</td></tr>
+                    <tr><td>-2 to -1</td><td><span class="signal-dot neutral"></span>Lean Bearish</td></tr>
+                    <tr><td>-5 to -3</td><td><span class="signal-dot bearish"></span>Bearish</td></tr>
+                    <tr><td>-6 or lower</td><td><span class="signal-dot bearish"></span>Strong Bearish</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- News Tab -->
+    <div id="news" class="tab-content">
+        <div class="card">
+            <div class="card-title">📰 Recent News & Catalysts</div>
+            {NEWS_ITEMS}
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📅 Upcoming Events</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Potential Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {UPCOMING_EVENTS}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="highlight-box warning">
+            <span class="highlight-icon">⚠️</span>
+            <div class="highlight-content">
+                <h4>Catalyst Alert</h4>
+                <p>{CATALYST_ALERT}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Setup Tab -->
+    <div id="trade" class="tab-content">
+        <div class="card">
+            <div class="card-title">💰 Complete Trade Setup</div>
+            
+            <div class="highlight-box info">
+                <span class="highlight-icon">📍</span>
+                <div class="highlight-content">
+                    <h4>Entry Zone</h4>
+                    <p>Look to enter between <strong>${ENTRY_LOW}</strong> and <strong>${ENTRY_HIGH}</strong>. Ideal entry on a pullback to support or breakout confirmation above resistance.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box danger">
+                <span class="highlight-icon">🛑</span>
+                <div class="highlight-content">
+                    <h4>Stop Loss: ${STOP_LOSS}</h4>
+                    <p><strong>Why this level?</strong> {STOP_LOSS_REASONING}</p>
+                    <p><strong>Risk:</strong> {STOP_PCT}% from entry (${MAX_LOSS_PER_SHARE} per share)</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box success">
+                <span class="highlight-icon">🎯</span>
+                <div class="highlight-content">
+                    <h4>Profit Targets</h4>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li><strong>Target 1:</strong> ${TARGET_1} (+{T1_PCT}%) - {T1_REASONING}</li>
+                        <li><strong>Target 2:</strong> ${TARGET_2} (+{T2_PCT}%) - {T2_REASONING}</li>
+                        <li><strong>Target 3:</strong> ${TARGET_3} (+{T3_PCT}%) - {T3_REASONING}</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <table style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Risk (to stop)</td>
+                        <td style="color: var(--bearish);">${RISK_AMOUNT} ({STOP_PCT}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Reward (to T1)</td>
+                        <td style="color: var(--bullish);">${REWARD_AMOUNT} (+{T1_PCT}%)</td>
+                    </tr>
+                    <tr>
+                        <td>Risk/Reward Ratio</td>
+                        <td style="font-weight: 700;">1:{RR_RATIO}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">⚠️ Risk Factors</div>
+            <div class="card-grid">
+                <div>
+                    <h4 style="margin-bottom: 12px;">Technical Risks</h4>
+                    <ul style="margin-left: 20px; color: var(--text-secondary);">
+                        {TECHNICAL_RISKS}
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 12px;">Fundamental Risks</h4>
+                    <ul style="margin-left: 20px; color: var(--text-secondary);">
+                        {FUNDAMENTAL_RISKS}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calculator Tab -->
+    <div id="calculator" class="tab-content">
+        <div class="card">
+            <div class="card-title">🧮 Position Size Calculator</div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Calculate your position size based on your risk tolerance. Adjust the values below to see how many shares you can buy.</p>
+            
+            <div class="calculator">
+                <div class="calc-grid">
+                    <div class="calc-input-group">
+                        <label>Entry Price ($)</label>
+                        <input type="number" id="calc-entry" value="{CURRENT_PRICE}" step="0.01" onchange="calculate()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Stop Loss ($)</label>
+                        <input type="number" id="calc-stop" value="{STOP_LOSS}" step="0.01" onchange="calculate()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Risk Budget ($)</label>
+                        <input type="number" id="calc-risk" value="500" step="50" onchange="calculate()">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>Target Price ($)</label>
+                        <input type="number" id="calc-target" value="{TARGET_1}" step="0.01" onchange="calculate()">
+                    </div>
+                </div>
+                
+                <div class="calc-results">
+                    <div class="calc-result-item">
+                        <div class="calc-result-value" id="result-shares">0</div>
+                        <div class="calc-result-label">Shares to Buy</div>
+                    </div>
+                    <div class="calc-result-item">
+                        <div class="calc-result-value" id="result-position">$0</div>
+                        <div class="calc-result-label">Position Size</div>
+                    </div>
+                    <div class="calc-result-item">
+                        <div class="calc-result-value" id="result-risk-per-share">$0</div>
+                        <div class="calc-result-label">Risk per Share</div>
+                    </div>
+                    <div class="calc-result-item">
+                        <div class="calc-result-value" id="result-potential-profit">$0</div>
+                        <div class="calc-result-label">Potential Profit</div>
+                    </div>
+                    <div class="calc-result-item">
+                        <div class="calc-result-value" id="result-rr">0:0</div>
+                        <div class="calc-result-label">Risk/Reward</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📊 Sample Scenarios</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Risk Budget</th>
+                        <th>Shares</th>
+                        <th>Position Value</th>
+                        <th>Max Loss</th>
+                        <th>Potential Gain (T1)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$100</td>
+                        <td id="scenario-100-shares">-</td>
+                        <td id="scenario-100-position">-</td>
+                        <td style="color: var(--bearish);">$100</td>
+                        <td id="scenario-100-gain" style="color: var(--bullish);">-</td>
+                    </tr>
+                    <tr>
+                        <td>$250</td>
+                        <td id="scenario-250-shares">-</td>
+                        <td id="scenario-250-position">-</td>
+                        <td style="color: var(--bearish);">$250</td>
+                        <td id="scenario-250-gain" style="color: var(--bullish);">-</td>
+                    </tr>
+                    <tr>
+                        <td>$500</td>
+                        <td id="scenario-500-shares">-</td>
+                        <td id="scenario-500-position">-</td>
+                        <td style="color: var(--bearish);">$500</td>
+                        <td id="scenario-500-gain" style="color: var(--bullish);">-</td>
+                    </tr>
+                    <tr>
+                        <td>$1,000</td>
+                        <td id="scenario-1000-shares">-</td>
+                        <td id="scenario-1000-position">-</td>
+                        <td style="color: var(--bearish);">$1,000</td>
+                        <td id="scenario-1000-gain" style="color: var(--bullish);">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="highlight-box warning">
+            <span class="highlight-icon">💡</span>
+            <div class="highlight-content">
+                <h4>Position Sizing Tip</h4>
+                <p>Never risk more than 1-2% of your total portfolio on a single trade. If your portfolio is $50,000, your max risk per trade should be $500-$1,000.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <h4>⚠️ Important Disclaimer</h4>
+        <p>This analysis is for <strong>informational purposes only</strong> and does not constitute investment advice. Trading stocks involves risk of loss. Past performance does not guarantee future results. Always do your own research before making investment decisions. Consider consulting a licensed financial advisor. The author is not responsible for any trading decisions made based on this report.</p>
+    </div>
+    
+    <script>
+        // Tab switching
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Calculator
+        function calculate() {
+            const entry = parseFloat(document.getElementById('calc-entry').value) || 0;
+            const stop = parseFloat(document.getElementById('calc-stop').value) || 0;
+            const risk = parseFloat(document.getElementById('calc-risk').value) || 0;
+            const target = parseFloat(document.getElementById('calc-target').value) || 0;
+            
+            const riskPerShare = Math.abs(entry - stop);
+            const shares = riskPerShare > 0 ? Math.floor(risk / riskPerShare) : 0;
+            const position = shares * entry;
+            const potentialProfit = shares * (target - entry);
+            const rewardPerShare = target - entry;
+            const rrRatio = riskPerShare > 0 ? (rewardPerShare / riskPerShare).toFixed(1) : 0;
+            
+            document.getElementById('result-shares').textContent = shares;
+            document.getElementById('result-position').textContent = '$' + position.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('result-risk-per-share').textContent = '$' + riskPerShare.toFixed(2);
+            document.getElementById('result-potential-profit').textContent = '$' + potentialProfit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('result-rr').textContent = '1:' + rrRatio;
+            
+            // Update scenarios
+            updateScenarios(entry, stop, target);
+        }
+        
+        function updateScenarios(entry, stop, target) {
+            const riskPerShare = Math.abs(entry - stop);
+            const rewardPerShare = target - entry;
+            
+            [100, 250, 500, 1000].forEach(budget => {
+                const shares = riskPerShare > 0 ? Math.floor(budget / riskPerShare) : 0;
+                const position = shares * entry;
+                const gain = shares * rewardPerShare;
+                
+                document.getElementById(`scenario-${budget}-shares`).textContent = shares;
+                document.getElementById(`scenario-${budget}-position`).textContent = '$' + position.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById(`scenario-${budget}-gain`).textContent = '+$' + gain.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            });
+        }
+        
+        // Initialize calculator on load
+        window.onload = function() {
+            calculate();
+        };
+    </script>
+</body>
+</html>

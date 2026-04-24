@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Analysis Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --blue: #3b82f6; --green: #10b981; --amber: #f59e0b;
+      --red: #ef4444; --purple: #8b5cf6; --pink: #ec4899;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+      --gray-400: #9ca3af; --gray-500: #6b7280; --gray-800: #1f2937; --gray-900: #111827;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); min-height: 100vh; line-height: 1.5; color: var(--gray-800); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; width: 100%; }
+    .header { margin-bottom: 32px; }
+    .header h1 { font-size: 1.875rem; font-weight: 700; color: var(--gray-900); }
+    .header p { color: var(--gray-500); margin-top: 8px; }
+
+    /* Grid layouts */
+    .grid { display: grid; gap: 16px; margin-bottom: 32px; width: 100%; }
+    .grid > * { min-width: 0; }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid var(--gray-200); box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow: hidden; min-width: 0; }
+    .card h3 { font-size: 1.125rem; font-weight: 700; color: var(--gray-800); margin-bottom: 16px; }
+
+    /* KPI Cards */
+    .kpi-card { display: flex; justify-content: space-between; align-items: flex-start; }
+    .kpi-content { }
+    .kpi-label { font-size: 0.875rem; font-weight: 500; color: var(--gray-500); }
+    .kpi-value { font-size: 1.75rem; font-weight: 700; margin: 4px 0; }
+    .kpi-subtitle { font-size: 0.75rem; color: var(--gray-400); }
+    .kpi-icon { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .kpi-trend { display: flex; align-items: center; gap: 4px; font-size: 0.875rem; margin-top: 12px; }
+    .kpi-trend.up { color: var(--green); }
+    .kpi-trend.down { color: var(--red); }
+
+    /* Insight Cards */
+    .insights-section { margin-bottom: 32px; }
+    .insights-section h2 { font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; }
+    .insight { padding: 16px; border-radius: 8px; display: flex; gap: 12px; align-items: flex-start; }
+    .insight-icon { font-size: 1.25rem; margin-top: 2px; }
+    .insight-content h4 { font-weight: 600; color: var(--gray-800); }
+    .insight-content p { font-size: 0.875rem; color: var(--gray-500); margin-top: 4px; }
+    .insight-action { font-size: 0.875rem; font-weight: 500; color: var(--gray-800); margin-top: 8px; }
+    .insight-success { background: #ecfdf5; border: 1px solid #a7f3d0; }
+    .insight-success .insight-icon { color: var(--green); }
+    .insight-warning { background: #fffbeb; border: 1px solid #fde68a; }
+    .insight-warning .insight-icon { color: var(--amber); }
+    .insight-danger { background: #fef2f2; border: 1px solid #fecaca; }
+    .insight-danger .insight-icon { color: var(--red); }
+    .insight-info { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .insight-info .insight-icon { color: var(--blue); }
+
+    /* Chart containers */
+    .chart-container { position: relative; height: 280px; width: 100%; max-width: 100%; }
+    .chart-container.tall { height: 320px; }
+    .chart-container canvas { max-width: 100% !important; }
+
+    /* Progress bars */
+    .progress-item { margin-bottom: 16px; }
+    .progress-header { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 4px; }
+    .progress-header span:first-child { font-weight: 500; }
+    .progress-header span:last-child { color: var(--gray-500); }
+    .progress-bar { height: 12px; background: var(--gray-100); border-radius: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 6px; transition: width 0.3s; }
+    .progress-subtitle { font-size: 0.75rem; color: var(--gray-400); margin-top: 4px; }
+
+    /* Recommendations */
+    .recommendations { background: linear-gradient(to right, #2563eb, #4f46e5); border-radius: 12px; padding: 24px; color: #fff; }
+    .recommendations h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
+    .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .rec-grid { grid-template-columns: 1fr; } }
+    .rec-grid h4 { font-weight: 600; color: #bfdbfe; margin-bottom: 8px; }
+    .rec-grid ul { list-style: none; }
+    .rec-grid li { font-size: 0.875rem; margin-bottom: 8px; display: flex; gap: 8px; }
+    .rec-grid .check { color: #86efac; }
+    .rec-grid .cross { color: #fca5a5; }
+    .rec-grid .warn { color: #fde68a; }
+
+    /* Footer */
+    .footer { text-align: center; color: var(--gray-400); font-size: 0.875rem; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>Product Portfolio Analysis</h1>
+      <p>2023-2024 Performance Insights • 1,000 Daily Records</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-4">
+      <div class="card">
+        <div class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-value" style="color: var(--blue)">$11.2M</div>
+            <div class="kpi-subtitle">After discounts</div>
+          </div>
+          <div class="kpi-icon" style="background: #eff6ff; color: var(--blue);">💰</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-label">Units Sold</div>
+            <div class="kpi-value" style="color: var(--green)">29,631</div>
+            <div class="kpi-subtitle">All categories</div>
+          </div>
+          <div class="kpi-icon" style="background: #ecfdf5; color: var(--green);">🛒</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-label">Avg Marketing ROI</div>
+            <div class="kpi-value" style="color: var(--amber)">$2.31</div>
+            <div class="kpi-subtitle">Revenue per $1 spent</div>
+          </div>
+          <div class="kpi-icon" style="background: #fffbeb; color: var(--amber);">🎯</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-label">Top Performer</div>
+            <div class="kpi-value" style="color: var(--purple)">Toys +54%</div>
+            <div class="kpi-subtitle">Year-over-year</div>
+          </div>
+          <div class="kpi-icon" style="background: #f5f3ff; color: var(--purple);">📈</div>
+        </div>
+        <div class="kpi-trend up">📈 +53.7% vs last year</div>
+      </div>
+    </div>
+
+    <!-- Insights Section -->
+    <div class="card insights-section">
+      <h2>🎯 Key Strategic Insights</h2>
+      <div class="grid grid-2">
+        <div class="insight insight-success">
+          <span class="insight-icon">⭐</span>
+          <div class="insight-content">
+            <h4>Toys: Rising Star (+54% YoY)</h4>
+            <p>Highest growth category with strong demand. Currently 19.5% of revenue but momentum is exceptional.</p>
+            <p class="insight-action">→ INCREASE inventory & marketing allocation</p>
+          </div>
+        </div>
+        <div class="insight insight-success">
+          <span class="insight-icon">📈</span>
+          <div class="insight-content">
+            <h4>Fashion: Strong Performer (+26% YoY)</h4>
+            <p>Second-fastest growing category with excellent marketing ROI ($2.38/$ spent).</p>
+            <p class="insight-action">→ EXPAND product range & seasonal campaigns</p>
+          </div>
+        </div>
+        <div class="insight insight-danger">
+          <span class="insight-icon">📉</span>
+          <div class="insight-content">
+            <h4>Electronics: Declining (-19% YoY)</h4>
+            <p>Revenue dropped despite highest marketing spend. Lowest marketing ROI at $2.13/$ spent.</p>
+            <p class="insight-action">→ REDUCE marketing spend, reassess product mix</p>
+          </div>
+        </div>
+        <div class="insight insight-warning">
+          <span class="insight-icon">⚠️</span>
+          <div class="insight-content">
+            <h4>Q4 Weakness (only 19.6% of annual)</h4>
+            <p>All categories underperform in Oct-Nov. Missing holiday season opportunity.</p>
+            <p class="insight-action">→ Develop Q4-specific promotional strategy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Revenue by Category</h3>
+        <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Year-over-Year Growth</h3>
+        <div class="chart-container"><canvas id="growthChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Monthly Trends -->
+    <div class="card">
+      <h3>Monthly Revenue Trends</h3>
+      <div class="chart-container tall"><canvas id="monthlyChart"></canvas></div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Quarterly Performance</h3>
+        <div class="chart-container"><canvas id="quarterlyChart"></canvas></div>
+        <p style="text-align: center; color: var(--red); font-size: 0.875rem; font-weight: 500; margin-top: 12px;">⚠️ Q4 underperforms significantly</p>
+      </div>
+      <div class="card">
+        <h3>Customer Segments</h3>
+        <div class="progress-item">
+          <div class="progress-header"><span>Occasional</span><span>$3.91M</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 98%; background: var(--blue)"></div></div>
+          <div class="progress-subtitle">Avg order: $397.76</div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header"><span>Regular</span><span>$3.81M</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 95%; background: var(--green)"></div></div>
+          <div class="progress-subtitle">Avg order: $372.33</div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header"><span>Premium</span><span>$3.52M</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 88%; background: var(--amber)"></div></div>
+          <div class="progress-subtitle">Avg order: $367.68</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Marketing ROI by Category</h3>
+        <div class="chart-container"><canvas id="roiChart"></canvas></div>
+        <p style="text-align: center; color: var(--gray-500); font-size: 0.75rem; margin-top: 8px;">Revenue per $1 marketing spend</p>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recommendations">
+      <h2>📋 Portfolio Optimization Recommendations</h2>
+      <div class="rec-grid">
+        <div>
+          <h4>Invest More</h4>
+          <ul>
+            <li><span class="check">✓</span> <strong>Toys:</strong> Capitalize on 54% growth momentum - increase inventory 30%+</li>
+            <li><span class="check">✓</span> <strong>Fashion:</strong> Expand seasonal collections - strong segment appeal</li>
+            <li><span class="check">✓</span> <strong>Sports (May):</strong> Double down on peak season marketing</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Reduce / Reassess</h4>
+          <ul>
+            <li><span class="cross">✗</span> <strong>Electronics:</strong> Cut marketing 20% - lowest ROI despite highest spend</li>
+            <li><span class="cross">✗</span> <strong>Home Decor:</strong> Reduce deep discounts - high discounts don't drive volume</li>
+            <li><span class="warn">!</span> <strong>Q4 Strategy:</strong> Urgent need for holiday promotional plan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer">Data period: Jan 2023 - Dec 2024 • Analysis generated Feb 2026</p>
+  </div>
+
+  <script>
+    const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+
+    // Revenue by Category
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Sports', 'Electronics', 'Home Decor', 'Fashion', 'Toys'],
+        datasets: [{ data: [2403555, 2265785, 2192501, 2188679, 2187773], backgroundColor: COLORS }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { callback: v => '$' + (v/1e6).toFixed(1) + 'M' } } }
+      }
+    });
+
+    // YoY Growth
+    new Chart(document.getElementById('growthChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Sports', 'Electronics', 'Home Decor', 'Fashion', 'Toys'],
+        datasets: [{
+          data: [-11.7, -19.0, -13.9, 25.7, 53.7],
+          backgroundColor: [-11.7, -19.0, -13.9, 25.7, 53.7].map(v => v > 0 ? '#10B981' : '#EF4444')
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { ticks: { callback: v => v + '%' } } }
+      }
+    });
+
+    // Monthly Trends
+    new Chart(document.getElementById('monthlyChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+          { label: 'Sports', data: [208, 209, 251, 119, 342, 164, 234, 212, 286, 97, 69, 207], borderColor: '#3B82F6', backgroundColor: 'transparent', tension: 0.3 },
+          { label: 'Electronics', data: [171, 169, 186, 184, 163, 238, 254, 233, 239, 143, 124, 156], borderColor: '#10B981', backgroundColor: 'transparent', tension: 0.3 },
+          { label: 'Home Decor', data: [262, 68, 131, 245, 195, 169, 216, 197, 216, 206, 105, 176], borderColor: '#F59E0B', backgroundColor: 'transparent', tension: 0.3 },
+          { label: 'Fashion', data: [205, 205, 191, 190, 137, 244, 216, 193, 182, 97, 194, 128], borderColor: '#EF4444', backgroundColor: 'transparent', tension: 0.3 },
+          { label: 'Toys', data: [220, 241, 231, 161, 199, 208, 170, 183, 80, 195, 200, 94], borderColor: '#8B5CF6', backgroundColor: 'transparent', tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { ticks: { callback: v => '$' + v + 'K' } } }
+      }
+    });
+
+    // Quarterly
+    new Chart(document.getElementById('quarterlyChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [{
+          data: [2956559, 2965534, 3118158, 2198043],
+          backgroundColor: ['#3B82F6', '#3B82F6', '#3B82F6', '#EF4444']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { ticks: { callback: v => '$' + (v/1e6).toFixed(1) + 'M' } } }
+      }
+    });
+
+    // Marketing ROI
+    new Chart(document.getElementById('roiChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Sports', 'Fashion', 'Home Decor', 'Toys', 'Electronics'],
+        datasets: [{
+          data: [2.46, 2.38, 2.34, 2.16, 2.13],
+          backgroundColor: ['#10B981', '#3B82F6', '#3B82F6', '#3B82F6', '#EF4444']
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { callback: v => '$' + v.toFixed(2) } } }
+      }
+    });
+  </script>
+</body>
+</html>
