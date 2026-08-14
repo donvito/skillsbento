@@ -235,6 +235,8 @@ Deprioritize raw like count as the success metric.
 
 Worked prompts and abbreviated ideal answers live in [`references/sample-usage.md`](references/sample-usage.md).
 
+Full freeze-dried agent outputs from a live skill test: [`references/sample-output-live.md`](references/sample-output-live.md).
+
 | Prompt | What you should get |
 |--------|---------------------|
 | "How does For You actually rank posts?" | Pipeline + weight hierarchy + 48h/OON/diversity caveats + repo links |
@@ -261,3 +263,4 @@ Worked prompts and abbreviated ideal answers live in [`references/sample-usage.m
 - Under the Hood: https://x.com/i/under_the_hood
 - Local snapshot: `references/param-baselines-2026-08.md`
 - Sample prompts/outputs: `references/sample-usage.md`
+- Live freeze-dried run: `references/sample-output-live.md`
