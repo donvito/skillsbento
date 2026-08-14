@@ -16,6 +16,9 @@ Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok) 
 ### [stock-analyzer](./skills/stock-analyzer)
 Comprehensive stock analysis tool combining chart pattern recognition, live news research, and technical signal scoring. Generates a downloadable interactive HTML report with a tabbed layout and position sizing calculator.
 
+### [x-for-you-growth](./skills/x-for-you-growth)
+Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (`xai-org/x-algorithm`). Weight tables, drafting checklists, first-hour reply ops, and reach-death diagnosis — no spam or engagement-pod tactics.
+
 ### [x-twitter-stats-analyzer](./skills/x-twitter-stats-analyzer)
 Dedicated X (Twitter) analytics skill. Ingests X analytics exports and produces engagement composition analysis, growth funnel breakdowns, posting frequency insights, and an interactive React dashboard.
 
@@ -26,6 +29,7 @@ Each skill lives in its own directory with a `SKILL.md` that defines its trigger
 - *"Analyze AMZN stock"* → stock-analyzer
 - *"Create a product launch kit for my SaaS tool"* → product-launch-suite
 - *"Here's my sales CSV, give me insights"* → product-sales-analysis
+- *"How do I grow on X with the real algorithm?"* → x-for-you-growth
 
 ## License
 
