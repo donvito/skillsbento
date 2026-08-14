@@ -230,6 +230,27 @@ Deprioritize raw like count as the success metric.
 - Drafts pass the **Quick drafting checklist**.
 - If user reports dead reach: include Under the Hood + hygiene checklist before "just post more."
 
+
+## Sample usage
+
+Worked prompts and abbreviated ideal answers live in [`references/sample-usage.md`](references/sample-usage.md).
+
+| Prompt | What you should get |
+|--------|---------------------|
+| "How does For You actually rank posts?" | Pipeline + weight hierarchy + 48h/OON/diversity caveats + repo links |
+| "Rewrite: Excited to share my blog… link in bio" | 2–3 variants optimized for reply/quote/share; URL moved to reply; signal map |
+| "Audit this draft before I send" | Scored rubric (reply, quote, copy-link, follow, dwell, negative risk) + fix list |
+| "First-hour plan after I post at 8am" | Timed SOP (seed replies, stay present, no spam duplicates) |
+| "Impressions collapsed — same niche" | Ordered diagnosis (Under the Hood → bait/links → topic drift → cadence) |
+| "7-day plan for a small personal-AI account" | Day-by-day format + target signal + KPI focus on replies/follows |
+
+**Quick invoke lines**
+
+- Explain X For You ranking like a creator coach.
+- Rewrite this tweet for replies and quotes; put the link in a reply.
+- Audit this draft against Phoenix weights.
+- My reach died — run the diagnosis checklist.
+
 ## Reference links
 
 - Repo: https://github.com/xai-org/x-algorithm
@@ -239,3 +260,4 @@ Deprioritize raw like count as the success metric.
 - DeepWiki index: https://deepwiki.com/xai-org/x-algorithm
 - Under the Hood: https://x.com/i/under_the_hood
 - Local snapshot: `references/param-baselines-2026-08.md`
+- Sample prompts/outputs: `references/sample-usage.md`
