@@ -1,0 +1,38 @@
+{
+  "name": "skillsbento",
+  "interface": {
+    "displayName": "skillsbento"
+  },
+  "plugins": [
+    {
+      "name": "product-launch-suite",
+      "source": "./plugins/product-launch-suite",
+      "category": "Productivity"
+    },
+    {
+      "name": "product-sales-analysis",
+      "source": "./plugins/product-sales-analysis",
+      "category": "Analytics"
+    },
+    {
+      "name": "social-media-analyzer",
+      "source": "./plugins/social-media-analyzer",
+      "category": "Analytics"
+    },
+    {
+      "name": "stock-analyzer",
+      "source": "./plugins/stock-analyzer",
+      "category": "Finance"
+    },
+    {
+      "name": "x-twitter-stats-analyzer",
+      "source": "./plugins/x-twitter-stats-analyzer",
+      "category": "Analytics"
+    },
+    {
+      "name": "stream-shorts",
+      "source": "./plugins/stream-shorts",
+      "category": "Video"
+    }
+  ]
+}

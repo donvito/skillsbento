@@ -1,0 +1,19 @@
+{
+  "name": "product-launch-suite",
+  "description": "Generates a complete product launch document suite from a product name and description: Business & Market Strategy, Competitive Landscape & Feasibility, Product Roadmap & Partnerships, and a Sales Deck, backed by live web research.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "product-launch",
+    "go-to-market",
+    "strategy",
+    "sales-deck",
+    "market-research"
+  ]
+}

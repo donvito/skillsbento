@@ -1,0 +1,22 @@
+{
+  "name": "stream-shorts",
+  "description": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen camera, captions, frame-0 hook, real footage), with YouTube titles and descriptions. Every video is versioned and reproducible.",
+  "version": "2.0.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "livestream",
+    "video",
+    "shorts",
+    "youtube",
+    "clips",
+    "chapters",
+    "transcript",
+    "ffmpeg"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "stock-analyzer",
+  "version": "1.0.0",
+  "description": "Stock analysis combining chart pattern recognition, live news research and technical signal scoring. Generates a downloadable interactive HTML report with a tabbed layout and a position sizing calculator. Not financial advice.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "stocks",
+    "technical-analysis",
+    "trading",
+    "research"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Stock Analyzer",
+    "shortDescription": "Chart patterns, live news and signal scoring in one HTML report",
+    "longDescription": "Stock analysis combining chart pattern recognition, live news research and technical signal scoring. Generates a downloadable interactive HTML report with a tabbed layout and a position sizing calculator. Not financial advice.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Finance",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Analyze AMZN stock",
+      "Here's a chart screenshot, what's the setup?"
+    ]
+  }
+}

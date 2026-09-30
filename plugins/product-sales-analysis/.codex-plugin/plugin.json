@@ -1,0 +1,32 @@
+{
+  "name": "product-sales-analysis",
+  "version": "1.0.0",
+  "description": "Analyzes sales/ecommerce CSV data and generates an interactive HTML dashboard with KPIs, category performance, YoY growth trends, marketing ROI and prioritized recommendations.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "sales",
+    "ecommerce",
+    "analytics",
+    "dashboard",
+    "csv"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product Sales Analysis",
+    "shortDescription": "Sales CSV to an interactive HTML dashboard with insights",
+    "longDescription": "Analyzes sales/ecommerce CSV data and generates an interactive HTML dashboard with KPIs, category performance, YoY growth trends, marketing ROI and prioritized recommendations.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Analytics",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Here's my sales CSV, give me insights",
+      "Analyze product performance and build a sales dashboard"
+    ]
+  }
+}

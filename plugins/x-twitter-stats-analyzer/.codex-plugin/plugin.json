@@ -1,0 +1,32 @@
+{
+  "name": "x-twitter-stats-analyzer",
+  "version": "1.0.0",
+  "description": "Dedicated X (Twitter) analytics skill. Ingests X analytics exports and produces engagement composition analysis, growth funnel breakdowns, posting frequency insights and an interactive React dashboard.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "x",
+    "twitter",
+    "analytics",
+    "growth",
+    "dashboard"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "X (Twitter) Stats Analyzer",
+    "shortDescription": "X analytics exports to a growth and engagement dashboard",
+    "longDescription": "Dedicated X (Twitter) analytics skill. Ingests X analytics exports and produces engagement composition analysis, growth funnel breakdowns, posting frequency insights and an interactive React dashboard.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Analytics",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Analyze my X analytics export",
+      "How is my posting frequency affecting growth?"
+    ]
+  }
+}

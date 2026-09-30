@@ -1,0 +1,95 @@
+{
+  "name": "skillsbento",
+  "description": "Free agent skills as installable plugins: analytics, research and livestream-to-content workflows for Claude Code and Codex",
+  "owner": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "plugins": [
+    {
+      "name": "product-launch-suite",
+      "source": "./plugins/product-launch-suite",
+      "description": "Generates a complete product launch document suite from a product name and description: Business & Market Strategy, Competitive Landscape & Feasibility, Product Roadmap & Partnerships, and a Sales Deck, backed by live web research.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "product-launch",
+        "go-to-market",
+        "strategy",
+        "sales-deck",
+        "market-research"
+      ]
+    },
+    {
+      "name": "product-sales-analysis",
+      "source": "./plugins/product-sales-analysis",
+      "description": "Analyzes sales/ecommerce CSV data and generates an interactive HTML dashboard with KPIs, category performance, YoY growth trends, marketing ROI and prioritized recommendations.",
+      "version": "1.0.0",
+      "category": "analytics",
+      "keywords": [
+        "sales",
+        "ecommerce",
+        "analytics",
+        "dashboard",
+        "csv"
+      ]
+    },
+    {
+      "name": "social-media-analyzer",
+      "source": "./plugins/social-media-analyzer",
+      "description": "Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok) from CSV/Excel exports: engagement rate, follow conversion, viral content patterns, and a React dashboard with strategic recommendations.",
+      "version": "1.0.0",
+      "category": "analytics",
+      "keywords": [
+        "social-media",
+        "analytics",
+        "engagement",
+        "dashboard"
+      ]
+    },
+    {
+      "name": "stock-analyzer",
+      "source": "./plugins/stock-analyzer",
+      "description": "Stock analysis combining chart pattern recognition, live news research and technical signal scoring. Generates a downloadable interactive HTML report with a tabbed layout and a position sizing calculator. Not financial advice.",
+      "version": "1.0.0",
+      "category": "finance",
+      "keywords": [
+        "stocks",
+        "technical-analysis",
+        "trading",
+        "research"
+      ]
+    },
+    {
+      "name": "x-twitter-stats-analyzer",
+      "source": "./plugins/x-twitter-stats-analyzer",
+      "description": "Dedicated X (Twitter) analytics skill. Ingests X analytics exports and produces engagement composition analysis, growth funnel breakdowns, posting frequency insights and an interactive React dashboard.",
+      "version": "1.0.0",
+      "category": "analytics",
+      "keywords": [
+        "x",
+        "twitter",
+        "analytics",
+        "growth",
+        "dashboard"
+      ]
+    },
+    {
+      "name": "stream-shorts",
+      "source": "./plugins/stream-shorts",
+      "description": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen camera, captions, frame-0 hook, real footage), with YouTube titles and descriptions. Every video is versioned and reproducible.",
+      "version": "2.0.0",
+      "category": "video",
+      "keywords": [
+        "livestream",
+        "video",
+        "shorts",
+        "youtube",
+        "clips",
+        "chapters",
+        "transcript",
+        "ffmpeg"
+      ]
+    }
+  ]
+}
