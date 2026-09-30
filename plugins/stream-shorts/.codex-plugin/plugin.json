@@ -1,0 +1,35 @@
+{
+  "name": "stream-shorts",
+  "version": "2.0.0",
+  "description": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen camera, captions, frame-0 hook, real footage), with YouTube titles and descriptions. Every video is versioned and reproducible.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "livestream",
+    "video",
+    "shorts",
+    "youtube",
+    "clips",
+    "chapters",
+    "transcript",
+    "ffmpeg"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Stream Studio",
+    "shortDescription": "Livestream to clips, chapters, summary reels and 9:16 shorts",
+    "longDescription": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen camera, captions, frame-0 hook, real footage), with YouTube titles and descriptions. Every video is versioned and reproducible.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Video",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Process my stream: clips, transcript and chapters",
+      "Make a 30s vertical short about the biggest announcement"
+    ]
+  }
+}

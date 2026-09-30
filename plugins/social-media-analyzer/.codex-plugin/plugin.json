@@ -1,0 +1,31 @@
+{
+  "name": "social-media-analyzer",
+  "version": "1.0.1",
+  "description": "Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok) from CSV/Excel exports: engagement rate, follow conversion, viral content patterns, and a React dashboard with strategic recommendations.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "social-media",
+    "analytics",
+    "engagement",
+    "dashboard"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Social Media Analyzer",
+    "shortDescription": "Social media exports to a React dashboard and recommendations",
+    "longDescription": "Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok) from CSV/Excel exports: engagement rate, follow conversion, viral content patterns, and a React dashboard with strategic recommendations.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Analytics",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Analyze my social media analytics export",
+      "Which of my posts performed best and why?"
+    ]
+  }
+}

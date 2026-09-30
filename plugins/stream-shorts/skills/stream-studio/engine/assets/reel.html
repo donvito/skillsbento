@@ -1,0 +1,203 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>Motion Reel</title>
+<!-- Fonts: prefer the brand's own font files (copy into fonts/ and declare @font-face below).
+     Fallback: Google Fonts (needs network at render time). -->
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=block" rel="stylesheet">
+<style>
+/* @font-face{font-family:'Brand';src:url('fonts/Brand.woff2') format('woff2');font-weight:100 900} */
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+</head><body><canvas id="c"></canvas>
+<script>
+/* ======================= 1. CONFIG ======================= */
+window.REEL_CONFIG = {
+  w: 1920, h: 1080, fps: 60, duration: 30, bpm: 120,          // new_project.py fills these
+  theme: { bg: '#0a0a0a', fg: '#fafafa', muted: '#8f8f8f', dim: 'rgba(250,250,250,.58)', paper: '#f5f4f1', ink: '#0a0a0a',
+           inkDim: 'rgba(10,10,10,.6)', elev: '#1c1b19', accent: '#fafafa', accentInk: '#0a0a0a', flash: '#ffffff' },
+  fonts: { d: 'Inter Tight', b: 'Inter Tight', m: 'JetBrains Mono' },
+  fontLoads: ['600 100px "Inter Tight"', '500 30px "Inter Tight"', '500 20px "JetBrains Mono"', '700 20px "JetBrains Mono"'],
+  displayTracking: -0.035,
+  hud: { title: 'YOUR BRAND — SHOWREEL', sections: [[0, 'OPEN'], [4, '01'], [9, '02'], [13, 'WORK'], [21, 'NUMBERS'], [25, 'CONTACT']] },
+  music: { mode: 'synth', style: 'energetic', mood: 'dark' },   // mode: synth|file|none · style: energetic|minimal|cinematic · mood: dark|bright|epic
+  // music: { mode: 'file', src: 'media/music.wav', offset: 0, gain: 0.9, sfx: 0.6 },
+};
+</script>
+<script src="engine.js"></script>
+<script>
+/* ======================= 2. CONTENT =======================
+   Every string / media id the scenes use. Media ids come from media/manifest.json (scripts/ingest.py).
+   Missing ids render as labelled placeholders, so you can lay out before ingesting. */
+const CONTENT = {
+  kicker: '$ render --showreel --brand "your brand"',
+  loading: 'MOTION · CLIPS · SOUND',
+  brand: 'YOUR BRAND',
+  sub: 'Short line about what you do.',
+  hero: { clip: 'hero', label: 'FEATURED', line: 'One bold sentence that sells the work.' },
+  feature: { clip: 'feature', index: '02', title: 'WHAT WE DO', body: 'Two short lines describing the offer in plain words.', chips: ['STRATEGY', 'DESIGN', 'BUILD'] },
+  grid: { title: 'SELECTED WORK', items: [['g1', 'Project one'], ['g2', 'Project two'], ['g3', 'Project three'], ['g4', 'Project four']] },
+  montage: [['m1', 'FAST'], ['m2', 'BOLD'], ['m3', 'CLEAR'], ['m4', 'HONEST'], ['m5', 'CRAFTED'], ['m6', 'TESTED'], ['m7', 'SHIPPED'], ['m8', 'LOVED']],
+  stats: [{ value: 10, suffix: '+', label: 'years of experience' }, { value: 120, suffix: '+', label: 'projects shipped' }, { value: 4.9, decimals: 1, suffix: '★', label: 'average client rating' }],
+  end: { lines: ["LET'S", 'TALK.'], cta: 'Book a call  →  yourdomain.com', image: 'portrait', name: 'Your Name', url: 'YOURDOMAIN.COM', ring: 'YOUR NAME · YOUR BRAND · YOURDOMAIN.COM · ' },
+};
+
+/* ======================= 3. SCENES =======================
+   draw(c, t, T): t = seconds since the scene started (negative during an incoming transition), T = global time.
+   Layout: W,H canvas · M safe margin · U unit (1 at 1080 short side) · PORTRAIT boolean. Cut on beats: BEAT = 60/BPM. */
+const S = {
+  open(c, t, T) {
+    bgFill(c, TH.bg); const cx = W / 2, cy = H / 2, L = W / 2 - M;
+    dotGrid(c, 48 * U, '#fff', .07 * P(t, .4, 1.4));
+    const pLine = E.outExpo(P(t, .45, 1.0)), pOut = E.inExpo(P(t, 1.6, 1.94)), half = L * pLine * (1 - pOut);
+    c.save(); c.shadowColor = TH.fg; c.shadowBlur = 30 * U; c.fillStyle = TH.fg;
+    if (t < .45) { c.beginPath(); c.arc(cx, cy, 14 * U * E.outElastic(P(t, .05, .45)), 0, 7); c.fill() } else c.fillRect(cx - half, cy - 1.5 * U, half * 2, 3 * U);
+    c.restore();
+    const n = Math.round(2 * L / (40 * U));
+    for (let i = 0; i <= n; i++) { const d = Math.abs(i - n / 2) * .012, p = E.outExpo(P(t, .7 + d, 1 + d)) * (1 - pOut); if (p <= .001) continue; const mj = i % 7 === 0; c.fillStyle = mj ? TH.fg : TH.muted; c.fillRect(cx - L + i * 2 * L / n - 1, cy + 16 * U, 2 * U, (mj ? 24 : 10) * U * p) }
+    c.save(); c.globalAlpha = 1 - pOut;
+    typeText(c, CONTENT.kicker, cx - L, cy - 48 * U, font(500, (PORTRAIT ? 26 : 34) * U, FM), TH.fg, t, .8, 64);
+    txt(c, `LOADING ${String(Math.round(100 * E.ioCubic(P(t, .9, 1.55)))).padStart(3, ' ')}%`, cx + L, cy + 84 * U, { font: font(500, 17 * U, FM), color: TH.dim, align: 'right', ls: 3 * U, alpha: P(t, .85, .95) });
+    txt(c, CONTENT.loading, cx - L, cy + 84 * U, { font: font(500, 17 * U, FM), color: TH.dim, ls: 3 * U, alpha: P(t, .95, 1.1) });
+    c.restore();
+    if (t > 1.8) { const p = P(t, 1.8, 2); c.save(); c.strokeStyle = TH.fg; c.lineWidth = (4 * (1 - p) + 1) * U; c.globalAlpha = 1 - p; c.beginPath(); c.arc(cx, cy, 30 * U + Math.max(W, H) * .4 * E.outExpo(p), 0, 7); c.stroke(); c.restore() }
+  },
+
+  title(c, t, T) {
+    bgFill(c, TH.bg); glow(c, W * .3, H * .4, Math.max(W, H) * .5, 'rgba(255,255,255,A)', .06);
+    c.save(); c.strokeStyle = 'rgba(255,255,255,.045)'; c.lineWidth = 1; const off = (t * 160 * U) % (90 * U); for (let x = -H + off; x < W + H; x += 90 * U) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x - H * .5, H); c.stroke() } c.restore();
+    const s = fit(c, CONTENT.brand, 600, FD, W - 2 * M, 300 * U), f = font(600, s, FD);
+    const pin = E.outExpo(P(t, 0, .45)), k = lerp(1.9, 1, pin), cy = H * .47;
+    for (let j = 5; j >= 1; j--) { const ep = E.outExpo(P(t, 0, 1)), a = (1 - P(t, .15, 1.1)) * (1 - j / 6) * .35; if (a <= 0) continue;
+      c.save(); c.translate(W / 2, cy); c.scale(k * (1 + j * .1 * ep), k * (1 + j * .1 * ep)); c.font = f; c.letterSpacing = s * DT + 'px'; c.textAlign = 'center'; c.strokeStyle = TH.fg; c.lineWidth = 1.5 / k; c.globalAlpha = a; c.strokeText(CONTENT.brand, 0, s * .36); c.restore() }
+    c.save(); c.translate(W / 2, cy); c.scale(k, k); c.font = f; c.letterSpacing = s * DT + 'px'; c.textAlign = 'center'; c.fillStyle = TH.fg; c.globalAlpha = clamp(t / .05); c.fillText(CONTENT.brand, 0, s * .36); c.restore();
+    const ss = (PORTRAIT ? 40 : 38) * U; wordsRise(c, CONTENT.sub, W / 2 - Math.min(W - 2 * M, mw(c, CONTENT.sub, font(500, ss, FB))) / 2, cy + s * .36 + 90 * U, ss, 500, FB, TH.dim, t, .55, W - 2 * M);
+    const sp = E.outBack(P(t, .8, 1.2)); if (sp > 0) star(c, W - M - 30 * U, cy - s * .7, 44 * U * sp, 13 * U * sp, 4, t * 2, TH.fg);
+  },
+
+  hero(c, t, T) {
+    bgFill(c, TH.bg); const h = CONTENT.hero, r = E.outExpo(P(t, 0, .7));
+    const w = lerp(W * .38, W, r), hh = lerp(H * .38, H, r), x = (W - w) / 2, y = (H - hh) / 2;
+    media(c, h.clip, t, x, y, w, hh, { zoom: lerp(1.18, 1.0, E.outCubic(P(t, 0, 5))), radius: lerp(24 * U, 0, r) });
+    const g = c.createLinearGradient(0, H * .45, 0, H); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.72)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    const ls = (PORTRAIT ? 64 : 76) * U, bottom = H - M * (PORTRAIT ? 2.2 : 1.4);
+    const lines = Math.ceil(mw(c, h.line, font(600, ls, FD)) / (W - 2 * M * (PORTRAIT ? 1 : 2.5))) || 1;
+    wordsRise(c, h.line, M, bottom - (lines - 1) * ls * 1.08, ls, 600, FD, TH.fg, t, .7, W - 2 * M * (PORTRAIT ? 1 : 2.5), { stag: .05, lh: 1.08 });
+    pill(c, M, bottom - lines * ls * 1.08 - 40 * U, h.label, { fg: TH.accentInk, bg: TH.accent, p: E.outBack(P(t, .5, .85)) });
+    txt(c, '[ 01 ]', M, M + 70 * U, { font: font(500, 18 * U, FM), color: TH.fg, ls: 3 * U, alpha: P(t, .3, .5) });
+  },
+
+  feature(c, t, T) {
+    bgFill(c, TH.bg); dotGrid(c, 44 * U, '#fff', .06, -t * 18 * U, 0, 1.2 * U); const f = CONTENT.feature;
+    const pin = E.outExpo(P(t, .05, .75));
+    const fr = PORTRAIT ? { x: M, y: H * .08, w: W - 2 * M, h: H * .42 } : { x: W * .47, y: H * .16, w: W * .53 - M, h: H * .68 };
+    c.save(); c.translate(fr.x + fr.w / 2 + (1 - pin) * W * .35, fr.y + fr.h / 2); c.rotate((1 - pin) * .06);
+    media(c, f.clip, t, -fr.w / 2, -fr.h / 2, fr.w, fr.h, { radius: 22 * U, zoom: 1.08 - .08 * E.outCubic(P(t, 0, 4)) }); c.restore();
+    const tx = M, tw = PORTRAIT ? W - 2 * M : W * .47 - M * 1.6, top = PORTRAIT ? H * .58 : H * .3;
+    txt(c, `[ ${f.index} ]`, tx, top, { font: font(500, 20 * U, FM), color: TH.muted, ls: 3 * U, alpha: P(t, .1, .3) });
+    const ts = fit(c, f.title, 600, FD, tw, 150 * U), ty = top + ts * .95;
+    riseText(c, f.title, tx, ty, ts, 600, FD, TH.fg, t, .2, .025, .5);
+    const bh = wordsRise(c, f.body, tx, ty + 80 * U, 34 * U, 500, FB, TH.dim, t, .7, tw, { stag: .04 });
+    let cx = tx; f.chips.forEach((l, j) => { const st = 1.5 + j * BEAT, p = E.outBack(P(t, st, st + .35)), fl = t >= st ? Math.exp(-(t - st) * 4) : 0;
+      cx += pill(c, cx, ty + 80 * U + bh + 50 * U, l, { fg: fl > .5 ? TH.accentInk : TH.fg, stroke: 'rgba(255,255,255,.45)', bg: `rgba(255,255,255,${.05 + .95 * fl})`, p }) + 14 * U });
+  },
+
+  grid(c, t, T) {
+    bgFill(c, TH.bg); const g = CONTENT.grid, cols = 2, rows = 2, gap = 18 * U;
+    const top = PORTRAIT ? H * .22 : H * .2, gw = W - 2 * M, gh = (PORTRAIT ? H * .62 : H * .68), tw = (gw - gap) / cols, th = (gh - gap) / rows;
+    riseText(c, g.title, M, top - 40 * U, 44 * U, 600, FD, TH.fg, t, .1, .02, .45);
+    txt(c, `${g.items.length} PROJECTS`, W - M, top - 40 * U, { font: font(500, 18 * U, FM), color: TH.muted, align: 'right', ls: 3 * U, alpha: P(t, .3, .5) });
+    const push = 1 + .05 * E.ioCubic(P(t, 0, 4));
+    c.save(); c.translate(W / 2, top + gh / 2); c.scale(push, push); c.translate(-W / 2, -(top + gh / 2));
+    g.items.forEach(([id, label], i) => { const st = i * BEAT, p = E.outBack(P(t, st, st + .4)); if (p <= 0) return;
+      const x = M + (i % cols) * (tw + gap), y = top + Math.floor(i / cols) * (th + gap);
+      c.save(); c.translate(x + tw / 2, y + th / 2); c.scale(p, p); media(c, id, t - st, -tw / 2, -th / 2, tw, th, { radius: 16 * U }); c.restore();
+      const lp = E.outCubic(P(t, st + .2, st + .5));
+      pill(c, x + 16 * U, y + th - 34 * U, label, { font: font(600, 16 * U, FM), fg: TH.fg, bg: 'rgba(0,0,0,.55)', h: 40 * U, p: lp, ls: 1.5 * U });
+      txt(c, String(i + 1).padStart(2, '0'), x + tw - 18 * U, y + 36 * U, { font: font(700, 18 * U, FM), color: TH.fg, align: 'right', alpha: lp }) });
+    c.restore();
+  },
+
+  montage(c, t, T) {
+    const list = CONTENT.montage, i = Math.min(list.length - 1, Math.floor(t / BEAT)), lt = t - i * BEAT, [id, word] = list[Math.max(0, i)];
+    if (t < 0) { bgFill(c, TH.bg); media(c, list[0][0], 0, 0, 0, W, H); return }
+    bgFill(c, i % 2 ? TH.paper : TH.bg);
+    if (i % 2 === 0) media(c, id, t, 0, 0, W, H, { zoom: 1.12 - .08 * E.outCubic(lt / BEAT) });
+    else { const inset = PORTRAIT ? { x: M, y: H * .14, w: W - 2 * M, h: H * .5 } : { x: W * .38, y: M, w: W * .62 - M, h: H - 2 * M }; media(c, id, t, inset.x, inset.y, inset.w, inset.h, { radius: 14 * U, zoom: 1.06 }) }
+    const s = fit(c, word, 600, FD, PORTRAIT ? W - 2 * M : i % 2 ? W * .38 - M - 50 * U : W * .5, 230 * U), p = E.outExpo(P(lt, 0, .22));
+    const col = i % 2 ? TH.ink : TH.fg, x = M, y = PORTRAIT ? H * .82 : H * .5 + s * .36;
+    if (i % 2 === 0) { const g = c.createLinearGradient(0, 0, W * .7, 0); g.addColorStop(0, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H) }
+    c.save(); c.translate((1 - p) * (i % 2 ? -1 : 1) * 160 * U, 0); riseText(c, word, x, y, s, 600, FD, col, lt, 0, .012, .28); c.restore();
+    txt(c, `${String(i + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`, M, M + 70 * U, { font: font(700, 18 * U, FM), color: col, ls: 3 * U });
+  },
+
+  stats(c, t, T) {
+    bgFill(c, TH.paper); const st = CONTENT.stats, n = st.length;
+    txt(c, 'BY THE NUMBERS', M, M + 90 * U, { font: font(500, 20 * U, FM), color: TH.inkDim, ls: 4 * U, alpha: P(t, .1, .3) });
+    st.forEach((s, i) => { const t0 = .5 + i * BEAT, p = E.outExpo(P(t, t0, t0 + .9)); if (t < t0) return;
+      let x, y, cw; if (PORTRAIT) { x = M; cw = W - 2 * M; y = H * .3 + i * H * .2 } else { cw = (W - 2 * M) / n; x = M + i * cw; y = H * .55 }
+      const size = fit(c, countUp(s.value, 1, s), 600, FD, cw - 60 * U, (PORTRAIT ? 170 : 150) * U);
+      riseText(c, countUp(s.value, p, s), x + (PORTRAIT ? 0 : 30 * U), y, size, 600, FD, TH.ink, t, t0, 0, .35);
+      txt(c, s.label, x + (PORTRAIT ? 0 : 30 * U), y + 56 * U, { font: font(500, 26 * U, FB), color: TH.inkDim, alpha: P(t, t0 + .15, t0 + .4) });
+      const lp = E.outExpo(P(t, t0, t0 + .6)); c.fillStyle = 'rgba(10,10,10,.15)';
+      if (PORTRAIT) c.fillRect(x, y - size - 30 * U, cw * lp, 1.5 * U); else if (i) c.fillRect(x, y - size * .9, 1.5 * U, (size + 110 * U) * lp) });
+  },
+
+  end(c, t, T) {
+    bgFill(c, TH.bg); glow(c, W * .2, H * .9, Math.max(W, H) * .6, 'rgba(255,255,255,A)', .08); dotGrid(c, 48 * U, '#fff', .05, t * 10, 0, 1.2 * U);
+    const e = CONTENT.end, hasImg = !!e.image;
+    const pc = PORTRAIT ? { x: W / 2, y: H * .26, r: W * .22 } : { x: W * .77, y: H * .44, r: H * .19 };
+    const tw = PORTRAIT || !hasImg ? W - 2 * M : W * .55, sL = Math.min(...e.lines.map(l => fit(c, l, 600, FD, tw, 250 * U)));
+    const y0 = PORTRAIT ? H * .55 : H * .42;
+    e.lines.forEach((l, i) => riseText(c, l, M, y0 + i * sL * .97, sL, 600, FD, i === e.lines.length - 1 ? TH.muted : TH.fg, t, i * .1, .04, .55));
+    const yb = y0 + (e.lines.length - 1) * sL * .97;
+    pill(c, M, yb + 110 * U, e.cta, { font: font(500, 26 * U, FB), fg: TH.accentInk, bg: TH.accent, h: 66 * U, padX: 34 * U, ls: 0, p: E.outBack(P(t, .5, .9)) });
+    if (hasImg) { const r = pc.r * E.outBack(P(t, .15, .65));
+      if (r > 0) { c.save(); c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1.5 * U; c.beginPath(); c.arc(pc.x, pc.y, pc.r + 20 * U, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * E.outExpo(P(t, .2, .9))); c.stroke(); c.restore();
+        c.save(); c.beginPath(); c.arc(pc.x, pc.y, r, 0, 7); c.clip(); image(c, e.image, pc.x - r, pc.y - r, 2 * r, 2 * r); c.restore() }
+      ringText(c, e.ring, pc.x, pc.y, pc.r + 52 * U, t * .5 - 1.6, font(500, 17 * U, FM), TH.fg, P(t, .3, .7));
+      if (!PORTRAIT) { const np = E.outCubic(P(t, .45, .85));
+        txt(c, e.name, pc.x, pc.y + pc.r + 130 * U, { font: font(500, 40 * U, FB), color: TH.fg, align: 'center', alpha: np });
+        txt(c, e.url, pc.x, pc.y + pc.r + 172 * U, { font: font(500, 17 * U, FM), color: TH.muted, align: 'center', ls: 4 * U, alpha: np }) } }
+  },
+};
+
+/* ======================= 4. TIMELINE ======================= */
+Reel.start({
+  scenes: [
+    { name: 'open', start: 0, draw: S.open },
+    { name: 'title', start: 2, draw: S.title },
+    { name: 'hero', start: 4, draw: S.hero },
+    { name: 'feature', start: 9, draw: S.feature },
+    { name: 'grid', start: 13, draw: S.grid },
+    { name: 'montage', start: 17, draw: S.montage },
+    { name: 'stats', start: 21, draw: S.stats },
+    { name: 'end', start: 25, draw: S.end },
+  ],
+  transitions: [
+    { type: 'wipe', from: 1, to: 2, start: 3.7, end: 4.1, angle: -12, color: '#fafafa' },
+    { type: 'whip', from: 2, to: 3, start: 8.8, end: 9.2, axis: 'x' },
+    { type: 'iris', from: 3, to: 4, start: 12.6, end: 13.1, x: .5, y: .5, stroke: '#fafafa' },
+    { type: 'whip', from: 4, to: 5, start: 16.8, end: 17.2, axis: 'y' },
+    { type: 'zoom', from: 5, to: 6, start: 20.6, end: 21.2 },
+    { type: 'whip', from: 6, to: 7, start: 24.8, end: 25.2, axis: 'x' },
+  ],
+  /* One timeline for picture AND sound: scripts/score.py reads these.
+     shake/flash (0..1) drive the camera; type selects the sound. */
+  cues: [
+    { t: .05, type: 'blip', note: 4 }, { t: .3, type: 'riser', dur: 1.7 }, { t: .8, type: 'typing', dur: .65 },
+    { t: 2, type: 'impact', gain: 1, shake: 1, flash: .45 },
+    { t: 3.6, type: 'whoosh', dur: .5 }, { t: 4, type: 'impact', gain: .6, shake: .6 },
+    { t: 8.7, type: 'whoosh', dur: .5 }, { t: 9, type: 'impact', gain: .6, shake: .6 },
+    { t: 10.5, type: 'blip', note: 7 }, { t: 11, type: 'blip', note: 8 }, { t: 11.5, type: 'blip', note: 9 },
+    { t: 12.5, type: 'whoosh', dur: .55 }, { t: 13, type: 'impact', gain: .6, shake: .5 },
+    { t: 13.5, type: 'blip', note: 5 }, { t: 14, type: 'blip', note: 6 }, { t: 14.5, type: 'blip', note: 7 },
+    { t: 15.5, type: 'riser', dur: 1.3 }, { t: 16.7, type: 'whoosh', dur: .5 },
+    ...[0, 1, 2, 3, 4, 5, 6, 7].map(i => ({ t: 17 + i * .5, type: i ? 'stab' : 'impact', gain: i ? .8 : .9, shake: i ? .35 : .8 })),
+    { t: 20.5, type: 'whoosh', dur: .6 }, { t: 21, type: 'impact', gain: 1, shake: .9, flash: .6 },
+    { t: 21.5, type: 'blip', note: 10 }, { t: 22, type: 'blip', note: 11 }, { t: 22.5, type: 'blip', note: 12 },
+    { t: 24.7, type: 'whoosh', dur: .5 }, { t: 25, type: 'impact', gain: 1, shake: .8, flash: .35, end: true },
+    { t: 25.3, type: 'bell', note: 12 }, { t: 25.55, type: 'bell', note: 10 }, { t: 25.8, type: 'bell', note: 9 }, { t: 26.05, type: 'bell', note: 12 },
+    // clip sound: { t: 4, type: 'clip_audio', id: 'hero', in: 0, dur: 5, gain: 1, duck: .7 },
+  ],
+});
+</script></body></html>
