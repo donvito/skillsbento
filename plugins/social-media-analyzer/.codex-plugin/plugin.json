@@ -1,6 +1,6 @@
 {
   "name": "social-media-analyzer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok) from CSV/Excel exports: engagement rate, follow conversion, viral content patterns, and a React dashboard with strategic recommendations.",
   "author": {
     "name": "Melvin Dave Vivas",

@@ -1,5 +1,5 @@
 ---
-name: social-media-analytics
+name: social-media-analyzer
 description: Analyzes social media performance data (Twitter/X, Instagram, LinkedIn, TikTok, etc.) to extract insights, identify patterns, and generate actionable recommendations. Use when the user uploads CSV/Excel files containing social metrics (impressions, engagements, followers, likes, shares, etc.) and asks for analysis, trends, performance review, content strategy advice, or data visualization.
 ---
 
