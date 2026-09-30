@@ -7,6 +7,21 @@
   },
   "plugins": [
     {
+      "name": "x-for-you-growth",
+      "source": "./plugins/x-for-you-growth",
+      "description": "Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (xai-org/x-algorithm): weight tables, drafting checklists, first-hour reply ops and reach-death diagnosis. Drafts and coaches only: no spam, no engagement pods.",
+      "version": "1.0.0",
+      "category": "social",
+      "keywords": [
+        "x",
+        "twitter",
+        "growth",
+        "algorithm",
+        "reach",
+        "content"
+      ]
+    },
+    {
       "name": "product-launch-suite",
       "source": "./plugins/product-launch-suite",
       "description": "Generates a complete product launch document suite from a product name and description: Business & Market Strategy, Competitive Landscape & Feasibility, Product Roadmap & Partnerships, and a Sales Deck, backed by live web research.",

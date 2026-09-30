@@ -1,0 +1,33 @@
+{
+  "name": "x-for-you-growth",
+  "version": "1.0.0",
+  "description": "Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (xai-org/x-algorithm): weight tables, drafting checklists, first-hour reply ops and reach-death diagnosis. Drafts and coaches only: no spam, no engagement pods.",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "x",
+    "twitter",
+    "growth",
+    "algorithm",
+    "reach",
+    "content"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "X For You Growth",
+    "shortDescription": "X growth coaching based on the open-source For You algorithm",
+    "longDescription": "Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (xai-org/x-algorithm): weight tables, drafting checklists, first-hour reply ops and reach-death diagnosis. Drafts and coaches only: no spam, no engagement pods.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Social",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "How do I grow on X with the real algorithm?",
+      "Audit this draft post for reach"
+    ]
+  }
+}

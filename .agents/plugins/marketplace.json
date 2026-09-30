@@ -5,6 +5,11 @@
   },
   "plugins": [
     {
+      "name": "x-for-you-growth",
+      "source": "./plugins/x-for-you-growth",
+      "category": "Social"
+    },
+    {
       "name": "product-launch-suite",
       "source": "./plugins/product-launch-suite",
       "category": "Productivity"
