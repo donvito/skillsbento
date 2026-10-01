@@ -38,6 +38,11 @@
       "name": "stream-shorts",
       "source": "./plugins/stream-shorts",
       "category": "Video"
+    },
+    {
+      "name": "devils-advocate",
+      "source": "./plugins/devils-advocate",
+      "category": "Productivity"
     }
   ]
 }

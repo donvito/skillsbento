@@ -24,6 +24,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 
 | Plugin | What it does |
 |---|---|
+| [`devils-advocate`](plugins/devils-advocate) | Constructively challenge ideas: test assumptions, weigh counterarguments and alternative hypotheses, examine risks and second-order effects, and finish with an evidence-calibrated recommendation. |
 | [`x-for-you-growth`](plugins/x-for-you-growth) | Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (`xai-org/x-algorithm`): weight tables, drafting checklists, first-hour reply ops, reach-death diagnosis, sample usage and live sample outputs. Drafts and coaches only: no spam or engagement pods. |
 | [`stream-shorts`](plugins/stream-shorts) | **Stream Studio**: livestream to transcript, subtitles, chapters, one clip per feature, summary reels and animated 9:16 shorts, with YouTube titles and descriptions. Versioned and reproducible. Claude Code also gets `/process-stream` and `/make-shorts`. Needs ffmpeg and Python, see its [README](plugins/stream-shorts/README.md). |
 | [`product-launch-suite`](plugins/product-launch-suite) | Product launch document suite from a name and description: business and market strategy, competitive landscape and feasibility, roadmap and partnerships, sales deck, backed by live web research. |
@@ -34,6 +35,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 
 Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.md`. Skills trigger from plain requests, for example:
 
+- *"Stress-test my plan and tell me what evidence would change your recommendation"* → devils-advocate
 - *"How do I grow on X with the real algorithm?"* → x-for-you-growth
 - *"Analyze AMZN stock"* → stock-analyzer
 - *"Create a product launch kit for my SaaS tool"* → product-launch-suite

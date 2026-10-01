@@ -105,6 +105,19 @@
         "transcript",
         "ffmpeg"
       ]
+    },
+    {
+      "name": "devils-advocate",
+      "source": "./plugins/devils-advocate",
+      "description": "Constructively challenge ideas, test assumptions and competing explanations, and recommend a next step calibrated to the evidence.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "critical-thinking",
+        "decision-making",
+        "assumptions",
+        "constructive-challenge"
+      ]
     }
   ]
 }

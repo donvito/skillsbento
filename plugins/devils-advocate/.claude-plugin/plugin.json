@@ -1,0 +1,14 @@
+{
+  "name": "devils-advocate",
+  "version": "1.0.0",
+  "description": "Constructively challenge ideas, test assumptions and competing explanations, and recommend a next step calibrated to the evidence.",
+  "author": {
+    "name": "Plugin owner"
+  },
+  "keywords": [
+    "critical-thinking",
+    "decision-making",
+    "assumptions",
+    "constructive-challenge"
+  ]
+}

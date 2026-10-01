@@ -1,0 +1,27 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "devils-advocate",
+  "version": "1.0.0",
+  "description": "Constructively challenge ideas, test assumptions and competing explanations, and recommend a next step calibrated to the evidence.",
+  "author": { "name": "Plugin owner" },
+  "keywords": ["critical-thinking", "decision-making", "assumptions", "constructive-challenge"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Devil’s Advocate",
+        "shortDescription": "Challenge ideas constructively",
+        "longDescription": "A constructive thinking partner that tests assumptions, distinguishes facts from inferences, surfaces strong counterarguments and alternative hypotheses, examines risks and second-order effects, asks what evidence would change the conclusion, and ends with a calibrated recommendation. It can endorse a well-supported idea and updates its judgment when the evidence changes. Skills only; no external service or account connection required.",
+        "developerName": "Plugin owner",
+        "category": "Productivity",
+        "capabilities": ["Interactive"],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg",
+        "defaultPrompt": [
+          "Challenge this idea constructively: [my idea]. Test the assumptions and end with a calibrated recommendation.",
+          "Stress-test this decision: [my decision and evidence]. What am I missing, and what evidence would change the conclusion?",
+          "Compare the strongest case for and against [my proposal], including alternative explanations, risks, and second-order effects."
+        ]
+      }
+    }
+  }
+}
