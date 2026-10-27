@@ -1,0 +1,20 @@
+{
+  "name": "usage-graph",
+  "description": "Shows your Claude Code usage above the prompt: 5-hour and weekly plan limits with reset times, and context window fill, each as a live card with a sparkline and progress bar.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "usage",
+    "rate-limits",
+    "context",
+    "status",
+    "mod"
+  ],
+  "types": "./types/index.d.ts"
+}

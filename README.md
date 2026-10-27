@@ -24,6 +24,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 
 | Plugin | What it does |
 |---|---|
+| [`usage-graph`](plugins/usage-graph) | **Claude Code mod**: a band above the prompt with your 5-hour and weekly plan limits (with local reset times) and context window fill, each as a live card with a sparkline and progress bar. Claude Code only, see its [README](plugins/usage-graph/README.md). |
 | [`devils-advocate`](plugins/devils-advocate) | Constructively challenge ideas: test assumptions, weigh counterarguments and alternative hypotheses, examine risks and second-order effects, and finish with an evidence-calibrated recommendation. |
 | [`x-for-you-growth`](plugins/x-for-you-growth) | Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (`xai-org/x-algorithm`): weight tables, drafting checklists, first-hour reply ops, reach-death diagnosis, sample usage and live sample outputs. Drafts and coaches only: no spam or engagement pods. |
 | [`stream-shorts`](plugins/stream-shorts) | **Stream Studio**: livestream to transcript, subtitles, chapters, one clip per feature, summary reels and animated 9:16 shorts (split-screen or full-frame overlay), with YouTube titles and descriptions. Built-in `grok` and `claude` styles alongside the default neon look. Versioned and reproducible. Claude Code also gets `/process-stream` and `/make-shorts`. Needs ffmpeg and Python, see its [README](plugins/stream-shorts/README.md). |
@@ -33,7 +34,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 | [`x-twitter-stats-analyzer`](plugins/x-twitter-stats-analyzer) | X analytics exports to engagement composition, growth funnel, posting frequency insights and a React dashboard. |
 | [`stock-analyzer`](plugins/stock-analyzer) | Chart pattern recognition, live news and technical signal scoring in one interactive HTML report. Not financial advice. |
 
-Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.md`. Skills trigger from plain requests, for example:
+Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.md` (`usage-graph` is the exception: a mod, which draws in Claude Code's interface rather than answering requests). Skills trigger from plain requests, for example:
 
 - *"Stress-test my plan and tell me what evidence would change your recommendation"* → devils-advocate
 - *"How do I grow on X with the real algorithm?"* → x-for-you-growth
@@ -55,9 +56,10 @@ plugins/<name>/
   .codex-plugin/plugin.json          Codex manifest
   skills/<name>/SKILL.md             the skill (plus references/, scripts/, assets/)
   commands/                          optional, Claude Code slash commands
+  hooks/                             a mod's hooks module (Claude Code only, e.g. usage-graph)
 ```
 
-Both marketplaces list the same plugins and point at the same folders, so a skill is written once and works in both tools.
+Both marketplaces list the same skill plugins and point at the same folders, so a skill is written once and works in both tools. Mods such as `usage-graph` are listed in the Claude Code marketplace only.
 
 ## Adding a plugin
 

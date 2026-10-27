@@ -118,6 +118,20 @@
         "assumptions",
         "constructive-challenge"
       ]
+    },
+    {
+      "name": "usage-graph",
+      "source": "./plugins/usage-graph",
+      "description": "Shows your Claude Code usage above the prompt: 5-hour and weekly plan limits with reset times, and context window fill, each as a live card with a sparkline and progress bar. Claude Code only.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "usage",
+        "rate-limits",
+        "context",
+        "status",
+        "mod"
+      ]
     }
   ]
 }
