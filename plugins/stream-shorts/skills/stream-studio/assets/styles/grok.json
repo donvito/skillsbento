@@ -1,0 +1,74 @@
+{
+  "name": "grok",
+  "description": "Grok Bot / xAI content. Monochrome Grok colours (black, white, greys) with Claude-style editorial type: Source Serif 4 + italic, Inter, mono kickers. Black Grok-UI cards for Grok things, white paper cards for everyday things.",
+  "use_for": [
+    "Grok",
+    "Grok Bot",
+    "GrokBot",
+    "xAI",
+    "Grok Voice",
+    "Grok Imagine"
+  ],
+  "layout": "overlay",
+  "layouts": [
+    "overlay"
+  ],
+  "prompt": "Grok, Grok Bot, xAI, ChatGPT, OpenAI",
+  "cta": "Follow for more",
+  "ctaEdu": "Save this & follow",
+  "fonts": {
+    "display": "SourceSerif4-SemiBold.ttf",
+    "italic": "SourceSerif4-SemiBoldItalic.ttf",
+    "body": "Inter.woff2",
+    "mono": "JetBrainsMono.ttf"
+  },
+  "colors": {
+    "bg": "#0B0B0C",
+    "panel": "#FFFFFF",
+    "panel2": "#F4F4F2",
+    "pink": "#0B0B0C",
+    "cyan": "#8E8E93",
+    "yel": "#0B0B0C",
+    "lime": "#30A46C",
+    "red": "#E5484D",
+    "green": "#30A46C",
+    "white": "#FFFFFF",
+    "dim": "#8E8E93",
+    "ink": "#0B0B0C"
+  },
+  "tokens": {
+    "ink": "#0B0B0C",
+    "paper": "#FFFFFF",
+    "paper2": "#F4F4F2",
+    "grey": "#8E8E93",
+    "grey2": "#5A5A5F",
+    "line": "rgba(11,11,12,.10)",
+    "hair": "rgba(255,255,255,.16)",
+    "card": "#0E0E10",
+    "cardInk": "#FFFFFF",
+    "cardDim": "#A1A1AA",
+    "accent": "#0B0B0C",
+    "hot": "#0B0B0C",
+    "red": "#E5484D",
+    "green": "#30A46C",
+    "wash": "247,247,245",
+    "halo": "rgba(255,255,255,.55)",
+    "chip": "#FFFFFF",
+    "chipInk": "#0B0B0C",
+    "chipDim": "rgba(11,11,12,.32)",
+    "progress": "#0B0B0C",
+    "endBg": "#0B0B0C",
+    "endFg": "#FFFFFF",
+    "endDim": "#A1A1AA",
+    "endRing": "#FFFFFF",
+    "endDot": "rgba(255,255,255,.06)",
+    "stage": "#F4F4F2"
+  },
+  "logos": "Optional per project (not bundled): put the Grok Bot avatar / ChatGPT logo in short.json \"images\" as ids grok / gpt; every helper skips ids that are missing.",
+  "music": {
+    "mode": "synth",
+    "style": "energetic",
+    "mood": "bright",
+    "sfx": 0.22
+  }
+}
