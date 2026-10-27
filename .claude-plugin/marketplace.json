@@ -92,8 +92,8 @@
     {
       "name": "stream-shorts",
       "source": "./plugins/stream-shorts",
-      "description": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen camera, captions, frame-0 hook, real footage), with YouTube titles and descriptions. Every video is versioned and reproducible.",
-      "version": "2.0.0",
+      "description": "Livestream to content pipeline in one skill: standard folder layout, transcripts, per-feature clips, chapters, subtitles, summary reels and animated 9:16 shorts (split-screen or full-frame overlay, captions, frame-0 hook, real footage, built-in grok and claude styles), with YouTube titles and descriptions. Every video is versioned and reproducible.",
+      "version": "2.1.0",
       "category": "video",
       "keywords": [
         "livestream",

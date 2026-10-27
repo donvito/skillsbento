@@ -1,5 +1,7 @@
 # Style guide: what makes these shorts work
 
+> This file is the default neon look and the pacing/hook rules every short follows. For the refined `grok` and `claude` looks (editorial serif, paper/dark cards, overlay layout) read `styles.md`: its visual rules replace the neon ones below, the hook, pacing and audio rules still apply.
+
 The examples below come from real shorts made with this skill (an AI-engineering livestream). Treat them as patterns, and swap in the creator's own topic and voice.
 
 ## Hook (frame 0)

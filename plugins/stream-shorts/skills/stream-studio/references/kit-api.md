@@ -1,5 +1,7 @@
 # kit.js API (on top of the engine globals in engine/references/engine-api.md)
 
+> With a `"style"` in short.json, kit.js also carries the style layer: editorial primitives + the overlay or split layer. Those helpers (`serif`, `kicker`, `paper`, `dark`, `logo`, `phone`, `overlayCam`, `overlayCaptions`…) are documented in `styles.md`.
+
 Constants: `C` palette (`bg panel panel2 pink cyan yel lime red green white dim ink`, overridable with `BRAND.colors`), `SEAM = 960`, font families `FA` (display), `FS` (body), `FJ` (mono), loaded from `fonts/display.ttf`, `body.ttf` and `mono.ttf`.
 `BR` is the merged brand: `handle tagline ring live cta ctaEdu watermark faceFocus colors`. `hexA('#rrggbb', a)` gives an rgba string.
 Engine globals you'll use: `W H P E lerp clamp rng noise1 font txt pill glow typeText ringText clip image`.

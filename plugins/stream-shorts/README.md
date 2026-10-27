@@ -9,6 +9,8 @@ raw stream ──► transcript + subtitles + chapters ──► one clip per fe
 - Standard folder layout with linked file names (clip, transcript, subtitles, chapters and thumbnail share a stem)
 - `/process-stream video.mp4` (Claude Code): transcribes, finds each feature, cuts one clip per feature, writes paste-ready chapters
 - `/make-shorts <topic | clip>` (Claude Code): animated 9:16 shorts with your camera, word-synced captions, a frame-0 hook, real footage, YouTube title and description
+- Two layouts: **split** (animated stage on top, camera below) and **overlay** (your camera fills the frame, motion graphics float on top)
+- Built-in styles: **`grok`** (Grok Bot monochrome, for Grok/xAI content) and **`claude`** (ivory + terracotta, for Claude/Claude Code content), both with Source Serif 4 + Inter editorial type. `/make-shorts` asks which one to use (recommending the topic match), or set `"style"` in short.json ([`references/styles.md`](skills/stream-studio/references/styles.md))
 - Summary reels with their own chapter timings
 - Every short and reel lives in a `--vN` folder with its inputs, so it can be regenerated
 

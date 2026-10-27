@@ -2,7 +2,7 @@
 
 Workflow for `/make-shorts`. Folder layout and file naming come from `folders.md`; read it first. `SKILL` below is the skill's base directory.
 
-Split-screen shorts rendered by a bundled motion-reel engine (deterministic canvas → headless Chromium → ffmpeg).
+Shorts rendered by a bundled motion-reel engine (deterministic canvas → headless Chromium → ffmpeg). Two layouts: **split** (animated stage on top, camera below; the default kit) and **overlay** (full-frame camera with motion graphics on top; needs a style). Two built-in **styles**, `grok` and `claude`, set palette, fonts, helpers and template: see `styles.md`.
 
 ```
 SKILL=<this skill's base directory>
@@ -12,7 +12,7 @@ $SKILL/assets/                  kit.js (layout + animation helpers) · template.
 $SKILL/references/              style.md (read before storyboarding) · kit-api.md · youtube.md
 ```
 
-Layout (1080×1920): the **top 0–960 is the animated stage** and the **bottom 960–1920 is the camera**, filling half the screen. Captions sit on the seam between them, with a progress bar on top, the creator's handle as a watermark, and a 1.2–1.5s branded end card.
+Default split layout (1080×1920): the **top 0–960 is the animated stage** and the **bottom 960–1920 is the camera**, filling half the screen. Captions sit on the seam between them, with a progress bar on top, the creator's handle as a watermark, and a 1.2–1.5s branded end card.
 
 ## 1. Intake: ask only what you can't work out
 
@@ -22,7 +22,9 @@ Before cutting anything, make sure you know the items below. Look first: check t
 |---|---|---|
 | **Source**: which recording(s) or clip folder | always, unless given | — |
 | **How many shorts + tone**: funny / educational / mix | if not stated | 3, mix |
-| **Brand**: handle, tagline, LIVE badge yes/no, colours/fonts | no brand.json found | neon pink/cyan/yellow on black · Anton + Space Grotesk |
+| **Style**: `grok` (Grok Bot black/white/grey + serif) · `claude` (Claude ivory + terracotta) · `neon` (default kit) | **always** for a new short, unless the request names a style or this is a new version of an existing short (keep the previous `"style"`) | the topic match, listed first as "(Recommended)": Grok/Grok Bot/xAI → `grok`, Claude/Claude Code/Anthropic → `claude`, else `neon` |
+| **Layout**: overlay (camera fills the frame, no box) or split | only if unclear: vertical selfie/phone footage → overlay; small stream facecam → split | the style's default (overlay) |
+| **Brand**: handle, tagline, LIVE badge yes/no, colours/fonts | no brand.json found | neon pink/cyan/yellow on black · Anton + Space Grotesk (a style overrides colours/fonts) |
 | **Camera setup**: facecam inside the recording / separate camera file / no camera | can't tell from a frame (run `frame` first and look) | the facecam box you found |
 | **Camera sync offset** | separate camera file given | match a spoken word in both transcripts and say what you found |
 | **Language** | the transcript isn't English | the detected language |
@@ -41,6 +43,8 @@ Save the brand once with `short.py brand --handle @x [--tagline ..] [--ring ..] 
 - *Educational*: concrete steps, before/after, real numbers shown on screen, "X vs Y".
 
 Aim for **15–20s of speech**. Plan the jump cuts: drop filler, pauses and repeats, but keep a stutter when it's the joke. A cold open with the punchline is allowed. If the user wants to choose, propose the candidates with one-line pitches and let them pick.
+
+**Styles.** With `"style"` set, scaffold writes kit.js = stock kit + the style layer, picks `assets/styles/template-<layout>.html`, copies the serif italic and inlines the word timings. Overlay `cut` builds the full-frame plate `cam` (crop with `"plate"`) and defaults to `"bottom": "full"` for the voice. Logos go in `"images"` (not bundled). Read `styles.md` for the helpers, tokens and the recipes (magazine-cover hook, flashback, flip cards, real demo phone + quote, then → now cards…).
 
 **2. Find the camera and screen boxes.** Run `short.py frame <video> --t 5 --out f.png`, then Read it. Zoom in with an ffmpeg crop to get exact edges. Use one of these setups in short.json:
 - `"face": [x,y,w,h]`: a facecam inside the recording. Use aspect ≈ 1.125 so it fills the half without bars, and shift the box so the face sits at about 55%.
