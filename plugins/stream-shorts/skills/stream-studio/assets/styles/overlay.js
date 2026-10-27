@@ -78,7 +78,7 @@ function overlayEnd(c, t, T, o = {}) {
   const lv = BR.live ? pop(t, .12) : 0;
   if (lv > 0) { c.save(); c.translate(cx, cy + r + 10); c.scale(lv, lv); rr(c, -92, -34, 184, 68, 34, ST.endFg); c.fillStyle = ST.red; c.beginPath(); c.arc(-50, 0, 11, 0, 7); c.fill(); mono(c, 'LIVE', 14, 2, 30, ST.endBg, { align: 'center', ls: 2 }); c.restore() }
   const s0 = o.start ?? (T - t), a1 = rise(T, s0 + .18), a2 = rise(T, s0 + .3);
-  const cta = o.line1 || BR.cta || 'Follow for more';
+  const cta = o.line1 || (o.edu ? BR.ctaEdu : BR.cta) || 'Follow for more';
   serif(c, cta, cx, 1105, Math.min(100, fit(c, cta, 600, SERIF, W - 140, 100)), { color: ST.endFg, halo: false, alpha: a1.a, dy: a1.dy });
   if (BR.handle) serif(c, BR.handle, cx, 1235, Math.min(92, fit(c, BR.handle, 600, ITAL, W - 140, 92)), { it: true, color: ST.endFg, halo: false, alpha: a2.a, dy: a2.dy });
   const tag = o.line3 ?? BR.tagline; if (tag) body(c, tag, cx, 1350, 34, ST.endDim, { align: 'center', alpha: P(t, .4, .6) });

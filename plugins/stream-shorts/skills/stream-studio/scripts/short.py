@@ -368,7 +368,7 @@ def cmd_cut(a):
     words, _ = transcribe(face, cfg.get("language", "en"), cfg.get("prompt") or (st or {}).get("prompt"))
     json.dump(words, open(os.path.join(out, "words.json"), "w"), ensure_ascii=False)
     json.dump({"segs": segs, "total": total}, open(os.path.join(out, "segs.json"), "w"))
-    print(f"{cfg['slug']}: {total:.2f}s of speech in {len(segs)} segments ({'overlay, style ' + st['name'] if overlay else modes[0]} layout)")
+    print(f"{cfg['slug']}: {total:.2f}s of speech in {len(segs)} segments ({'overlay layout, style ' + st['name'] if overlay else modes[0] + ' layout'})")
     if total > 21: print("  ⚠ longer than ~20s — trim segs for a snappier short")
     print("cut reads: " + " ".join(f"{w}[{s:.2f}]" for w, s, _ in words))
     print("energy of the cut:\n" + energy_map(face))

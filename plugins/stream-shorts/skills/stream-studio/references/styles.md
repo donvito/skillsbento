@@ -104,7 +104,7 @@ In split pages `CL` is also defined (paper, ivory, oat, ink, slate, cloud, orang
 | `runOverlay(c, T, BEATS, SPEECH)` | beats `[{a, draw(c, t, T, dur)}]`; each fades and drifts up over its last .16s. No stage, no box |
 | `overlayCaptions(c, T, CAPS, WORDS, {hideUntil, y, px})` | paper chip with serif text; words go from dim to ink as they're spoken, and `*hot*` words show in italic in `ST.hot`. Caption text can be edited freely: lighting is proportional to the source words spoken |
 | `overlayHandle(c)` · `overlayProgress(c, T, SPEECH)` | @handle at y 1600 · thin progress bar |
-| `overlayEnd(c, t, T, {faceT, start, logos:[a,b]})` | style end card: face ring, ring text, LIVE, serif CTA + italic handle, optional logos |
+| `overlayEnd(c, t, T, {faceT, start, edu, logos:[a,b]})` | style end card: face ring, ring text, LIVE, serif CTA (`ctaEdu` when `edu`) + italic handle, optional logos |
 
 ## Split layer (`split.js`, claude)
 

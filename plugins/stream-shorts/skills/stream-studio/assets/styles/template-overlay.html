@@ -96,7 +96,7 @@ const S = {
     overlayHandle(c);
     overlayProgress(c, T, SPEECH);
   },
-  end(c, t, T) { overlayEnd(c, t, T, { faceT: SPEECH - .05, start: SPEECH, logos: ['grok', 'gpt', 'claude'].filter(hasMedia) }) },
+  end(c, t, T) { overlayEnd(c, t, T, { faceT: SPEECH - .05, start: SPEECH, edu: __EDU__, logos: ['grok', 'gpt', 'claude'].filter(hasMedia) }) },
 };
 
 const hits = BEATS.slice(1).map(b => b.a);
