@@ -4,6 +4,9 @@ import type { Register, SessionContextUsage, SessionCost, SessionRateLimit } fro
 import type { Sample } from '../types'
 
 const history = atom({ plugin: 'usage-graph', key: 'history' } as const, [])
+const isHidden = atom({ plugin: 'usage-graph', key: 'isHidden' } as const, false)
+
+const COMMAND = 'usage-graph'
 
 const MAX_SAMPLES = 400
 const LIMITS_KEY = 'limits'
@@ -244,8 +247,21 @@ export const register: Register = on => {
       const kept = storedLimits(await $.store.get(LIMITS_KEY)).filter(s => s.t > now - KEEP_LIMITS_MS)
       await update($, history, () => [...kept, sample].slice(-MAX_SAMPLES))
     }
+    await $.command.register({
+      name: COMMAND,
+      description: 'Show or hide the usage band above the prompt',
+      argumentHint: '[show|hide]',
+    })
 
     return ran
+  })
+
+  on('command.run', { command: COMMAND }, async ($, e) => {
+    const arg = e.args.trim().toLowerCase()
+    const hide = arg === 'hide' ? true : arg === 'show' ? false : !(await read($, isHidden))
+    await update($, isHidden, () => hide)
+
+    return { text: hide ? 'Usage band hidden. Run /usage-graph to show it again.' : 'Usage band shown.' }
   })
 
   on('session.measure', async ($, e, next) => {
@@ -264,7 +280,12 @@ export const register: Register = on => {
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const samples = await read($, history)
-    if (e.props.hasSurvey || samples.length === 0) return next(e)
+    if (e.props.hasSurvey || samples.length === 0 || (await read($, isHidden))) return next(e)
+
+    const hide = () => {
+      void update($, isHidden, () => true)
+      $.ui.toast('Usage band hidden. Run /usage-graph to show it again.')
+    }
 
     const now = await $.clock.now()
     const last = current(samples, now)
@@ -272,12 +293,15 @@ export const register: Register = on => {
     const text = summary(last, now)
 
     if (e.surface === 'terminal') {
-      const { Box, Text } = $.ui.resolve(e)
+      const { Box, Button, Text } = $.ui.resolve(e)
       const width = Math.max(8, e.props.bodyColumns - 11)
 
       return (
         <Box flexDirection="column">
-          <Text dimColor>{text}</Text>
+          <Box flexDirection="row" justifyContent="space-between">
+            <Text dimColor>{text}</Text>
+            <Button key="hide" role="dismiss" label="Hide" onPress={hide} />
+          </Box>
           {shown.map(s => {
             const v = Math.max(0, Math.min(100, s.pick(last) ?? 0))
             const filled = Math.round((v / 100) * width)
@@ -295,10 +319,17 @@ export const register: Register = on => {
       )
     }
 
-    const { Svg } = $.ui.resolve(e)
+    const { Box, Button, Svg } = $.ui.resolve(e)
     const cards = toCards(samples, now)
     if (cards.length === 0) return next(e)
 
-    return <Svg source={cardsSvg(cards)} alt={`Usage: ${text}`} />
+    return (
+      <Box flexDirection="row" alignItems="flex-start">
+        <Box flexGrow={1}>
+          <Svg source={cardsSvg(cards)} alt={`Usage: ${text}`} />
+        </Box>
+        <Button key="hide" role="dismiss" label="Hide" onPress={hide} />
+      </Box>
+    )
   })
 }

@@ -10,7 +10,11 @@ Each metric gets its own card with the current percentage and a bar:
 
 Plan limits are your account's, so the mod keeps your latest limit readings between sessions: a new session shows them straight away, and its own first reply brings them up to date.
 
-The number turns amber at 75% and red at 90%. On an API key (no plan limits) the context card shows the session's cost instead. In the desktop app the band is drawn as cards; in a terminal, as text bars. Collapse the band with its `[-]`.
+The number turns amber at 75% and red at 90%. On an API key (no plan limits) the context card shows the session's cost instead. In the desktop app the band is drawn as cards; in a terminal, as text bars.
+
+## Hiding it
+
+Click **Hide** on the band to hide it for the rest of the session, or run `/usage-graph` to toggle it (`/usage-graph show` and `/usage-graph hide` also work). To turn it off in every session, disable the plugin: `claude plugin disable usage-graph@skillsbento`.
 
 ## Install
 

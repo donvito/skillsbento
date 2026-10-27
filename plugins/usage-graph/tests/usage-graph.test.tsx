@@ -13,6 +13,12 @@ const BAND = {
   },
 } as const
 
+const RUN = {
+  command: 'usage-graph',
+  origin: { kind: 'composer' },
+  presentation: { isFullscreen: false, columns: 80 },
+} as const
+
 test('the band graphs plan usage and context, on terminal and desktop', async ($, on) => {
   mock.clock(on)
   mock.store(on)
@@ -74,6 +80,7 @@ test('a new session shows the stored limits until its own reading', async ($, on
     ],
   })
   on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('command.register', () => ({ value: { command: 'usage-graph' } }))
   on('session.usage', () => ({ value: { startedAt: 10 * HOUR, context: { window: 200000 }, rateLimits: [] } }))
   on('session.measure', (_, e) => ({ changed: e.changed }))
 
@@ -99,4 +106,37 @@ test('a new session shows the stored limits until its own reading', async ($, on
   const terminal = await $.ui.mount({ ...BAND, surface: 'terminal' })
   expect((await terminal.find({ type: 'Text', text: /5h 26%/ }))?.text).toMatch(/7d 31%/)
   await terminal.unmount()
+})
+
+test('the band hides from its button and /usage-graph brings it back', async ($, on) => {
+  mock.clock(on)
+  mock.store(on)
+  on('session.measure', (_, e) => ({ changed: e.changed }))
+  on('ui.toast', () => ({ value: undefined }))
+  on('ui.render', ($, e) => {
+    const { Text } = $.ui.resolve(e)
+
+    return <Text>engine</Text>
+  })
+
+  await $.session.measure({
+    context: { window: 200000, tokens: 40000, percent: 20 },
+    rateLimits: [{ kind: 'five_hour', percentUsed: 12 }],
+    changed: ['context', 'rateLimits'],
+  })
+
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ ...BAND, surface })
+    await ui.press({ key: 'hide' })
+    expect((await ui.find({ type: 'Text', text: /engine/ }))?.text).toBe('engine')
+    await ui.unmount()
+
+    const shown = await $.command.run({ ...RUN, args: '' })
+    expect(shown.text).toBe('Usage band shown.')
+    const again = await $.ui.mount({ ...BAND, surface })
+    expect(await again.find({ type: 'Button' })).toBeTruthy()
+    await again.unmount()
+  }
+
+  expect((await $.command.run({ ...RUN, args: 'hide' })).text).toMatch(/hidden/)
 })

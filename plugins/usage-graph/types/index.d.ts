@@ -12,6 +12,6 @@ export type Sample = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'usage-graph': { history: Sample[] }
+    'usage-graph': { history: Sample[]; isHidden: boolean }
   }
 }
