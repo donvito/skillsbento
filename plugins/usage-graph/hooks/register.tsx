@@ -5,7 +5,10 @@ import type { Sample } from '../types'
 
 const history = atom({ plugin: 'usage-graph', key: 'history' } as const, [])
 
-const MAX_SAMPLES = 120
+const MAX_SAMPLES = 400
+const LIMITS_KEY = 'limits'
+const HOUR = 3_600_000
+const KEEP_LIMITS_MS = 8 * 24 * HOUR
 const BLOCKS = '▁▂▃▄▅▆▇█'
 
 type Series = {
@@ -46,6 +49,83 @@ type Reset = { at: string; left: string }
 
 // When a window resets, in local time: the clock alone today, the weekday
 // within the week, the date beyond it; and how long until then.
+// Plan limits are the account's, not the session's: their readings are kept
+// in $.store so a new session's graph starts with the window so far.
+function limitPart(s: Sample): Sample | undefined {
+  if (s.fiveHour === undefined && s.sevenDay === undefined) return undefined
+
+  return {
+    t: s.t,
+    fiveHour: s.fiveHour,
+    fiveHourResetsAt: s.fiveHourResetsAt,
+    sevenDay: s.sevenDay,
+    sevenDayResetsAt: s.sevenDayResetsAt,
+  }
+}
+
+function storedLimits(value: unknown): Sample[] {
+  return Array.isArray(value)
+    ? value.filter((s): s is Sample => typeof s === 'object' && s !== null && typeof s.t === 'number')
+    : []
+}
+
+function isLive(iso: string | undefined, now: number): boolean {
+  return iso !== undefined && Date.parse(iso) > now
+}
+
+// The latest value of each figure, from the latest sample that has it; a
+// limit whose window has already reset is dropped until a fresh reading.
+function current(samples: Sample[], now: number): Sample {
+  const out: Sample = { t: now }
+  for (const s of samples) {
+    if (s.fiveHour !== undefined) {
+      out.fiveHour = s.fiveHour
+      out.fiveHourResetsAt = s.fiveHourResetsAt
+    }
+    if (s.sevenDay !== undefined) {
+      out.sevenDay = s.sevenDay
+      out.sevenDayResetsAt = s.sevenDayResetsAt
+    }
+    if (s.context !== undefined) {
+      out.context = s.context
+      out.tokens = s.tokens
+      out.window = s.window
+    }
+    if (s.usd !== undefined) out.usd = s.usd
+  }
+  if (out.fiveHourResetsAt !== undefined && !isLive(out.fiveHourResetsAt, now)) {
+    out.fiveHour = undefined
+    out.fiveHourResetsAt = undefined
+  }
+  if (out.sevenDayResetsAt !== undefined && !isLive(out.sevenDayResetsAt, now)) {
+    out.sevenDay = undefined
+    out.sevenDayResetsAt = undefined
+  }
+
+  return out
+}
+
+// A limit's readings within its current window only, so a reset starts a
+// fresh line rather than a cliff.
+function windowValues(
+  samples: Sample[],
+  pick: (s: Sample) => number | undefined,
+  resetsAt: string | undefined,
+  hours: number,
+): number[] {
+  const start = resetsAt === undefined ? -Infinity : Date.parse(resetsAt) - hours * HOUR
+
+  return samples
+    .filter(s => s.t >= start && pick(s) !== undefined)
+    .map(s => pick(s)!)
+}
+
+function downsample(values: number[], n: number): number[] {
+  if (values.length <= n) return values
+
+  return Array.from({ length: n }, (_, i) => values[Math.round((i * (values.length - 1)) / (n - 1))]!)
+}
+
 function reset(iso: string | undefined, now: number): Reset | undefined {
   if (!iso) return undefined
   const when = Date.parse(iso)
@@ -149,7 +229,8 @@ function cardSvg(card: Card, x: number, w: number): string {
   // The sparkline sits right of the big number, scaled to its own range so
   // small moves still read; a flat run is drawn mid-height.
   let spark = ''
-  const vals = card.values.slice(-40)
+  const picked = downsample(card.values, 40)
+  const vals = picked.length === 1 ? [picked[0]!, picked[0]!] : picked
   if (vals.length >= 2) {
     const sx = left + 78
     const sw = x + w - pad - sx
@@ -202,19 +283,17 @@ function cardsSvg(cards: Card[]): string {
 }
 
 function toCards(samples: Sample[], now: number): Card[] {
-  const last = samples[samples.length - 1]!
-  const series = (pick: (s: Sample) => number | undefined) =>
-    samples.map(pick).filter((v): v is number => v !== undefined)
+  const last = current(samples, now)
   const cards: Card[] = []
 
   if (last.fiveHour !== undefined) {
-    cards.push({ title: '5-HOUR LIMIT', color: '#d97757', value: last.fiveHour, values: series(s => s.fiveHour), footer: resetFooter(last.fiveHourResetsAt, now) })
+    cards.push({ title: '5-HOUR LIMIT', color: '#d97757', value: last.fiveHour, values: windowValues(samples, s => s.fiveHour, last.fiveHourResetsAt, 5), footer: resetFooter(last.fiveHourResetsAt, now) })
   }
   if (last.sevenDay !== undefined) {
-    cards.push({ title: 'WEEKLY LIMIT', color: '#6a9bcc', value: last.sevenDay, values: series(s => s.sevenDay), footer: resetFooter(last.sevenDayResetsAt, now) })
+    cards.push({ title: 'WEEKLY LIMIT', color: '#6a9bcc', value: last.sevenDay, values: windowValues(samples, s => s.sevenDay, last.sevenDayResetsAt, 7 * 24), footer: resetFooter(last.sevenDayResetsAt, now) })
   }
   if (last.context !== undefined) {
-    cards.push({ title: 'CONTEXT', color: '#8f9a6b', value: last.context, values: series(s => s.context), footer: contextNote(last) })
+    cards.push({ title: 'CONTEXT', color: '#8f9a6b', value: last.context, values: samples.map(s => s.context).filter((v): v is number => v !== undefined), footer: contextNote(last) })
   }
 
   return cards
@@ -225,9 +304,11 @@ export const register: Register = on => {
     const ran = await next(e)
     // A reload runs this again; the history in $.state survives it.
     if ((await read($, history)).length === 0) {
+      const now = await $.clock.now()
       const usage = await $.session.usage()
-      const sample = toSample(await $.clock.now(), usage.context, usage.rateLimits, usage.cost)
-      await update($, history, () => [sample])
+      const sample = toSample(now, usage.context, usage.rateLimits, usage.cost)
+      const kept = storedLimits(await $.store.get(LIMITS_KEY)).filter(s => s.t > now - KEEP_LIMITS_MS)
+      await update($, history, () => [...kept, sample].slice(-MAX_SAMPLES))
     }
 
     return ran
@@ -237,6 +318,13 @@ export const register: Register = on => {
     const sample = toSample(await $.clock.now(), e.context, e.rateLimits, e.cost)
     await update($, history, list => [...list, sample].slice(-MAX_SAMPLES))
 
+    const limits = limitPart(sample)
+    if (limits) {
+      // Read again before writing: other sessions add to the same store.
+      const kept = storedLimits(await $.store.get(LIMITS_KEY)).filter(s => s.t > sample.t - KEEP_LIMITS_MS)
+      await $.store.set(LIMITS_KEY, [...kept, limits].slice(-MAX_SAMPLES))
+    }
+
     return next(e)
   })
 
@@ -244,9 +332,10 @@ export const register: Register = on => {
     const samples = await read($, history)
     if (e.props.hasSurvey || samples.length === 0) return next(e)
 
-    const last = samples[samples.length - 1]!
-    const shown = SERIES.filter(s => samples.some(sample => s.pick(sample) !== undefined))
-    const text = summary(last, await $.clock.now())
+    const now = await $.clock.now()
+    const last = current(samples, now)
+    const shown = SERIES.filter(s => s.pick(last) !== undefined)
+    const text = summary(last, now)
 
     if (e.surface === 'terminal') {
       const { Box, Text } = $.ui.resolve(e)

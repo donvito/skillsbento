@@ -15,6 +15,7 @@ const BAND = {
 
 test('the band graphs plan usage and context, on terminal and desktop', async ($, on) => {
   mock.clock(on)
+  mock.store(on)
   on('session.measure', (_, e) => ({ changed: e.changed }))
 
   for (const [five, ctx] of [
@@ -57,5 +58,33 @@ test('the band stays empty before any reading', async ($, on) => {
 
   const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
   expect((await ui.find({ type: 'Text', text: /engine/ }))?.text).toBe('engine')
+  await ui.unmount()
+})
+
+test('a new session starts with the limits graphed so far in their window', async ($, on) => {
+  const HOUR = 3_600_000
+  const at = (h: number) => new Date(h * HOUR).toISOString()
+  mock.clock(on, { now: 10 * HOUR })
+  mock.store(on, {
+    limits: [
+      { t: 1 * HOUR, fiveHour: 50, fiveHourResetsAt: at(3) },
+      { t: 6 * HOUR, fiveHour: 5, fiveHourResetsAt: at(11) },
+      { t: 8 * HOUR, fiveHour: 12, fiveHourResetsAt: at(11) },
+      { t: 9 * HOUR, fiveHour: 20, fiveHourResetsAt: at(11), sevenDay: 30, sevenDayResetsAt: at(100) },
+    ],
+  })
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('session.usage', () => ({ value: { startedAt: 10 * HOUR, context: { window: 200000 }, rateLimits: [] } }))
+
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+
+  const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  const source = String((await ui.find({ type: 'Svg' }))?.props.source)
+  const lines = [...source.matchAll(/<polyline points="([^"]+)"/g)].map(m => m[1]!.split(' ').length)
+  // 5-hour: the three readings of the window ending at 11h, not the old 50%.
+  // Weekly: its one reading, drawn as a flat line.
+  expect(lines).toEqual([3, 2])
+  expect(source).toMatch(/>20<tspan/)
+  expect(source).not.toMatch(/>50<tspan/)
   await ui.unmount()
 })

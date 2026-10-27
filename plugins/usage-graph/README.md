@@ -10,7 +10,7 @@ Each metric gets its own card with the current percentage, a sparkline of how it
 
 The number turns amber at 75% and red at 90%. On an API key (no plan limits) the context card shows the session's cost instead. In the desktop app it draws as a chart; in a terminal it draws as text sparklines. Collapse the band with its `[-]`.
 
-The graph gains a point whenever Claude Code measures usage: after each turn and whenever a limit moves a whole point. It keeps the last 120 points for the session.
+The graph gains a point whenever Claude Code measures usage: after each turn and whenever a limit moves a whole point. Plan limits are your account's, so their readings carry over between sessions: each limit's line covers its current window (the last 5 hours, the current week) and starts fresh when the window resets. Context is per session.
 
 ## Install
 
