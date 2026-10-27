@@ -45,7 +45,7 @@ test('the band graphs plan usage and context, on terminal and desktop', async ($
 
   const terminal = await $.ui.mount({ ...BAND, surface: 'terminal' })
   expect((await terminal.find({ type: 'Text', text: /context 50%/ }))?.text).not.toMatch(/\$/)
-  expect(await terminal.find({ type: 'Text', text: /[▁▂▃▄▅▆▇█]/ })).toBeTruthy()
+  expect(await terminal.find({ type: 'Text', text: /█/ })).toBeTruthy()
   await terminal.unmount()
 })
 
@@ -61,7 +61,7 @@ test('the band stays empty before any reading', async ($, on) => {
   await ui.unmount()
 })
 
-test('a new session starts with the limits graphed so far in their window', async ($, on) => {
+test('a new session shows the stored limits until its own reading', async ($, on) => {
   const HOUR = 3_600_000
   const at = (h: number) => new Date(h * HOUR).toISOString()
   mock.clock(on, { now: 10 * HOUR })
@@ -75,16 +75,28 @@ test('a new session starts with the limits graphed so far in their window', asyn
   })
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('session.usage', () => ({ value: { startedAt: 10 * HOUR, context: { window: 200000 }, rateLimits: [] } }))
+  on('session.measure', (_, e) => ({ changed: e.changed }))
 
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
 
   const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
   const source = String((await ui.find({ type: 'Svg' }))?.props.source)
-  const lines = [...source.matchAll(/<polyline points="([^"]+)"/g)].map(m => m[1]!.split(' ').length)
-  // 5-hour: the three readings of the window ending at 11h, not the old 50%.
-  // Weekly: its one reading, drawn as a flat line.
-  expect(lines).toEqual([3, 2])
+  // The latest stored reading in a live window, not the old 50% whose window reset.
   expect(source).toMatch(/>20<tspan/)
   expect(source).not.toMatch(/>50<tspan/)
   await ui.unmount()
+
+  // A fresh reading in the session replaces the stored one.
+  await $.session.measure({
+    context: { window: 200000, tokens: 20000, percent: 10 },
+    rateLimits: [
+      { kind: 'five_hour', percentUsed: 26, resetsAt: at(11) },
+      { kind: 'seven_day', percentUsed: 31, resetsAt: at(100) },
+    ],
+    changed: ['context', 'rateLimits'],
+  })
+
+  const terminal = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  expect((await terminal.find({ type: 'Text', text: /5h 26%/ }))?.text).toMatch(/7d 31%/)
+  await terminal.unmount()
 })

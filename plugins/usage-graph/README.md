@@ -2,15 +2,15 @@
 
 A Claude Code mod that shows your usage in a band above the prompt, so you can see how close you are to your limits without running `/usage`.
 
-Each metric gets its own card with the current percentage, a sparkline of how it has moved this session and a progress bar:
+Each metric gets its own card with the current percentage and a bar:
 
 - **5-hour limit**: with the local time it resets and how long until then, e.g. `Resets 4:14 PM · in 4h 40m`
 - **Weekly limit**: same, e.g. `Resets Fri 5:34 AM · in 2d 18h`
 - **Context**: how full the context window is, e.g. `28k / 200k tokens`
 
-The number turns amber at 75% and red at 90%. On an API key (no plan limits) the context card shows the session's cost instead. In the desktop app it draws as a chart; in a terminal it draws as text sparklines. Collapse the band with its `[-]`.
+Plan limits are your account's, so the mod keeps your latest limit readings between sessions: a new session shows them straight away, and its own first reply brings them up to date.
 
-The graph gains a point whenever Claude Code measures usage: after each turn and whenever a limit moves a whole point. Plan limits are your account's, so their readings carry over between sessions: each limit's line covers its current window (the last 5 hours, the current week) and starts fresh when the window resets. Context is per session.
+The number turns amber at 75% and red at 90%. On an API key (no plan limits) the context card shows the session's cost instead. In the desktop app the band is drawn as cards; in a terminal, as text bars. Collapse the band with its `[-]`.
 
 ## Install
 

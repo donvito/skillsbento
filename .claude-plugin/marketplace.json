@@ -122,8 +122,8 @@
     {
       "name": "usage-graph",
       "source": "./plugins/usage-graph",
-      "description": "Shows your Claude Code usage above the prompt: 5-hour and weekly plan limits with reset times, and context window fill, each as a live card with a sparkline and progress bar. Claude Code only.",
-      "version": "1.0.1",
+      "description": "Shows your Claude Code usage above the prompt: 5-hour and weekly plan limits with reset times, and context window fill, each as a live card with a percentage and a bar. Claude Code only.",
+      "version": "1.0.2",
       "category": "productivity",
       "keywords": [
         "usage",
