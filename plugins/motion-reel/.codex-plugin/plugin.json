@@ -1,0 +1,34 @@
+{
+  "name": "motion-reel",
+  "description": "Code-driven motion graphics: showreels, promo and launch videos, kinetic-typography intros, social teasers and 9:16 Shorts/Reels/TikTok cuts as MP4 with a beat-synced soundtrack, built from your own clips, photos, logos, screenshots and brand. Deterministic canvas + headless Chromium + ffmpeg rendering.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "video",
+    "motion-graphics",
+    "reel",
+    "shorts",
+    "promo",
+    "kinetic-typography",
+    "ffmpeg"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Motion Reel",
+    "shortDescription": "Beat-synced motion-graphics reels, promos and 9:16 Shorts",
+    "longDescription": "Code-driven motion graphics: showreels, promo and launch videos, kinetic-typography intros, social teasers and 9:16 Shorts/Reels/TikTok cuts as MP4 with a beat-synced soundtrack, built from your own clips, photos, logos, screenshots and brand. Deterministic canvas + headless Chromium + ffmpeg rendering.",
+    "developerName": "Melvin Dave Vivas",
+    "category": "Video",
+    "websiteURL": "https://github.com/donvito/skillsbento",
+    "defaultPrompt": [
+      "Make a 30s promo reel from these clips and my logo",
+      "Turn this screen recording into a 9:16 Short"
+    ]
+  }
+}
