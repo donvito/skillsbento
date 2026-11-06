@@ -1,0 +1,22 @@
+{
+  "name": "longform-video-voice-input-skill",
+  "description": "Voice recording to a faceless long-form YouTube explainer: word-synced motion graphics, your own app screenshots and screen recordings, real web screenshots, free stock photos and b-roll. Edits the voiceover (pickup lines, retakes, stumbles, long pauses) without breaking sync, and versions every render (v1, v2, v3\u2026).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "video",
+    "youtube",
+    "explainer",
+    "voiceover",
+    "faceless",
+    "motion-graphics",
+    "b-roll",
+    "ffmpeg"
+  ]
+}

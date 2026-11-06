@@ -1,0 +1,50 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>VIDEO TITLE</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/bricolage-600.woff2') format('woff2');font-weight:600}
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/bricolage-800.woff2') format('woff2');font-weight:800}
+@font-face{font-family:'Inter';src:url('fonts/inter-400-normal.woff2') format('woff2');font-weight:400 450}
+@font-face{font-family:'Inter';src:url('fonts/inter-500-normal.woff2') format('woff2');font-weight:500 550}
+@font-face{font-family:'Inter';src:url('fonts/inter-600-normal.woff2') format('woff2');font-weight:600}
+@font-face{font-family:'Inter';src:url('fonts/inter-700-normal.woff2') format('woff2');font-weight:700}
+@font-face{font-family:'JetBrains Mono';src:url('fonts/jetbrains-mono-500-normal.woff2') format('woff2');font-weight:500}
+@font-face{font-family:'JetBrains Mono';src:url('fonts/jetbrains-mono-600-normal.woff2') format('woff2');font-weight:600}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+</head><body><canvas id="c"></canvas>
+<script>
+window.REEL_CONFIG = {
+  w: 1920, h: 1080, fps: 30, duration: 0 /* = edited voice length + ~1s */, bpm: 100,
+  theme: { bg: '#0A0A0A', fg: '#F5F5F5', flash: '#F5F5F5' },
+  fonts: { d: 'Bricolage Grotesque', b: 'Inter', m: 'JetBrains Mono' },
+  fontLoads: ['600 100px "Bricolage Grotesque"', '800 100px "Bricolage Grotesque"', '400 30px "Inter"', '500 30px "Inter"', '600 30px "Inter"', '700 30px "Inter"', '500 20px "JetBrains Mono"', '600 20px "JetBrains Mono"'],
+  displayTracking: -0.02, shake: 6, vignette: 0.12, fadeIn: 0, fadeOut: 1.2,
+  hud: null,
+  music: { mode: 'none', sfx: 1 },
+};
+</script>
+<script src="vo.js"></script>
+<script src="engine.js"></script>
+<script src="lib.js"></script>
+<script src="parts.js"></script>
+<script src="media.js"></script>
+<script src="scenes.js"></script>   <!-- write the project's scenes here (S.name = (c, t, T) => {...}), absolute VO times -->
+<script>
+/* [name, start seconds, dark?]  start each scene a beat before its first spoken word */
+const SCN = [
+  ['hook', 0, 1],
+  // ['intro', 2.0, 0], ...
+];
+SCENE_DARK = SCN.map(([n, s, d]) => ({ start: s, dark: !!d }));
+const CH_STARTS = [];   // chapter-card start times (get a wipe)
+const scenes = SCN.map(([n, s]) => { if (!S[n]) throw new Error('missing scene ' + n); return { name: n, start: s, draw: S[n] } });
+const special = {};     // per-boundary overrides, e.g. { 73.7: { type: 'fade', d: .6 }, 90.4: { type: 'iris', x: .5, y: .5, d: .7 } }
+const transitions = [];
+for (let i = 1; i < SCN.length; i++) {
+  const s = SCN[i][1], darkA = SCN[i - 1][2], darkB = SCN[i][2];
+  const tr = special[s] || (CH_STARTS.includes(s) ? { type: 'wipe', angle: -14, color: '#F5F5F5', d: .7 } : darkA !== darkB ? { type: 'whip', axis: i % 2 ? 'x' : 'y', d: .5 } : { type: 'whip', axis: 'x', d: .45 });
+  transitions.push(Object.assign({}, tr, { from: i - 1, to: i, start: s - tr.d / 2, end: s + tr.d / 2 }));
+}
+Reel.start({ scenes, transitions, cues: [] });   // silent picture: the soundtrack is muxed separately (voice only by default)
+</script></body></html>

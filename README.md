@@ -28,6 +28,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 | [`devils-advocate`](plugins/devils-advocate) | Constructively challenge ideas: test assumptions, weigh counterarguments and alternative hypotheses, examine risks and second-order effects, and finish with an evidence-calibrated recommendation. |
 | [`x-for-you-growth`](plugins/x-for-you-growth) | Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (`xai-org/x-algorithm`): weight tables, drafting checklists, first-hour reply ops, reach-death diagnosis, sample usage and live sample outputs. Drafts and coaches only: no spam or engagement pods. |
 | [`stream-shorts`](plugins/stream-shorts) | **Stream Studio**: livestream to transcript, subtitles, chapters, one clip per feature, summary reels and animated 9:16 shorts (split-screen or full-frame overlay), with YouTube titles and descriptions. Built-in `grok` and `claude` styles alongside the default neon look. Versioned and reproducible. Claude Code also gets `/process-stream` and `/make-shorts`. Needs ffmpeg and Python, see its [README](plugins/stream-shorts/README.md). |
+| [`longform-video-voice-input-skill`](plugins/longform-video-voice-input-skill) | **Voice to long-form video**: turn a voiceover into a faceless 16:9 YouTube explainer with word-synced motion graphics, your app screenshots and recordings, real web screenshots, free stock photos and b-roll. Fixes pickup lines, retakes, stumbles and long pauses without breaking sync, and versions every render (v1, v2, v3…). Needs ffmpeg, Python and Playwright, see its [README](plugins/longform-video-voice-input-skill/README.md). |
 | [`product-launch-suite`](plugins/product-launch-suite) | Product launch document suite from a name and description: business and market strategy, competitive landscape and feasibility, roadmap and partnerships, sales deck, backed by live web research. |
 | [`product-sales-analysis`](plugins/product-sales-analysis) | Sales/ecommerce CSV to an interactive HTML dashboard: KPIs, category performance, YoY growth, marketing ROI, recommendations. |
 | [`social-media-analyzer`](plugins/social-media-analyzer) | Social exports (Twitter/X, Instagram, LinkedIn, TikTok) to engagement and conversion insights and a React dashboard. |
@@ -43,6 +44,7 @@ Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.
 - *"Here's my sales CSV, give me insights"* → product-sales-analysis
 - *"Process my stream and make a 30s short about the biggest announcement"* → stream-shorts
 - *"Make a Claude-style short from this selfie clip, overlay, no box"* → stream-shorts
+- *"Make a YouTube explainer from my voice recording and these screenshots"* → longform-video-voice-input-skill
 
 In Codex you can also name a skill explicitly, for example `$stock-analyzer analyze AMZN`.
 
