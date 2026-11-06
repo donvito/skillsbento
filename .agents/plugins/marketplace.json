@@ -48,6 +48,11 @@
       "name": "longform-video-voice-input-skill",
       "source": "./plugins/longform-video-voice-input-skill",
       "category": "Video"
+    },
+    {
+      "name": "motion-reel",
+      "source": "./plugins/motion-reel",
+      "category": "Video"
     }
   ]
 }
