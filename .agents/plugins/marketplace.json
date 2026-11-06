@@ -43,6 +43,11 @@
       "name": "devils-advocate",
       "source": "./plugins/devils-advocate",
       "category": "Productivity"
+    },
+    {
+      "name": "longform-video-voice-input-skill",
+      "source": "./plugins/longform-video-voice-input-skill",
+      "category": "Video"
     }
   ]
 }
