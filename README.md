@@ -25,6 +25,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 | Plugin | What it does |
 |---|---|
 | [`usage-graph`](plugins/usage-graph) | **Claude Code mod**: a band above the prompt with your 5-hour and weekly plan limits (with local reset times) and context window fill, each as a live card with a percentage and a bar. Claude Code only, see its [README](plugins/usage-graph/README.md). |
+| [`backdrops`](plugins/backdrops) | **Claude Code mod**: a scene behind the conversation in the desktop app, with a matching dark color theme. Fourteen themes: two F1 (Kimi Antonelli's Mercedes #12, Lewis Hamilton's Ferrari #44), six travel (space shuttle, Mt Fuji, Paris, Rome, Swiss Alps, Tokyo Shibuya) and six retro (Matrix, retro 80s, Windows XP, Windows 98, Macintosh, Linux). Switch from a picker above the chat box or `/backdrops:<name>`. Claude Code only, see its [README](plugins/backdrops/README.md). |
 | [`devils-advocate`](plugins/devils-advocate) | Constructively challenge ideas: test assumptions, weigh counterarguments and alternative hypotheses, examine risks and second-order effects, and finish with an evidence-calibrated recommendation. |
 | [`x-for-you-growth`](plugins/x-for-you-growth) | Organic X (Twitter) growth coaching grounded in the open-source For You / Phoenix ranking pipeline (`xai-org/x-algorithm`): weight tables, drafting checklists, first-hour reply ops, reach-death diagnosis, sample usage and live sample outputs. Drafts and coaches only: no spam or engagement pods. |
 | [`stream-shorts`](plugins/stream-shorts) | **Stream Studio**: livestream to transcript, subtitles, chapters, one clip per feature, summary reels and animated 9:16 shorts (split-screen or full-frame overlay), with YouTube titles and descriptions. Built-in `grok` and `claude` styles alongside the default neon look. Versioned and reproducible. Claude Code also gets `/process-stream` and `/make-shorts`. Needs ffmpeg and Python, see its [README](plugins/stream-shorts/README.md). |
@@ -36,7 +37,7 @@ Swap `stock-analyzer` for any plugin below. List what's available with `/plugin`
 | [`x-twitter-stats-analyzer`](plugins/x-twitter-stats-analyzer) | X analytics exports to engagement composition, growth funnel, posting frequency insights and a React dashboard. |
 | [`stock-analyzer`](plugins/stock-analyzer) | Chart pattern recognition, live news and technical signal scoring in one interactive HTML report. Not financial advice. |
 
-Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.md` (`usage-graph` is the exception: a mod, which draws in Claude Code's interface rather than answering requests). Skills trigger from plain requests, for example:
+Each plugin is a folder under `plugins/` with its skill in `skills/<name>/SKILL.md` (`usage-graph` and `backdrops` are the exceptions: mods, which draw in Claude Code's interface rather than answering requests). Skills trigger from plain requests, for example:
 
 - *"Stress-test my plan and tell me what evidence would change your recommendation"* → devils-advocate
 - *"How do I grow on X with the real algorithm?"* → x-for-you-growth
@@ -63,7 +64,7 @@ plugins/<name>/
   hooks/                             a mod's hooks module (Claude Code only, e.g. usage-graph)
 ```
 
-Both marketplaces list the same skill plugins and point at the same folders, so a skill is written once and works in both tools. Mods such as `usage-graph` are listed in the Claude Code marketplace only.
+Both marketplaces list the same skill plugins and point at the same folders, so a skill is written once and works in both tools. Mods such as `usage-graph` and `backdrops` are listed in the Claude Code marketplace only.
 
 ## Adding a plugin
 
@@ -75,4 +76,4 @@ Both marketplaces list the same skill plugins and point at the same folders, so 
 
 ## License
 
-[Apache License 2.0](LICENSE). Copyright 2026 Melvin Dave Vivas. Fonts bundled in `stream-shorts` (Anton, Space Grotesk, JetBrains Mono, Source Serif 4, Inter) are under the SIL Open Font License; their texts are in `plugins/stream-shorts/skills/stream-studio/assets/fonts/`.
+[Apache License 2.0](LICENSE). Copyright 2026 Melvin Dave Vivas. Fonts bundled in `stream-shorts` (Anton, Space Grotesk, JetBrains Mono, Source Serif 4, Inter) are under the SIL Open Font License; their texts are in `plugins/stream-shorts/skills/stream-studio/assets/fonts/`. The photos in `plugins/backdrops/photos/`, and the portraits traced from them, are from Wikimedia Commons under CC BY-SA 4.0; their credits are in `plugins/backdrops/photos/CREDITS.md`.
