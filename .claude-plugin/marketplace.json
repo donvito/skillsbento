@@ -136,8 +136,8 @@
     {
       "name": "backdrops",
       "source": "./plugins/backdrops",
-      "description": "Claude Code mod: a scene behind the conversation in the desktop app, with a matching dark color theme. Seventeen themes: two F1 (Kimi Antonelli's Mercedes #12, Lewis Hamilton's Ferrari #44), six travel (space shuttle, Mt Fuji, Paris, Rome, Swiss Alps, Tokyo Shibuya), six retro (Matrix, retro 80s, Windows XP, Windows 98, Macintosh, Linux) and three Christmas (fireplace, village, snow globe), switched from a picker above the chat box or /backdrops:<name>. Claude Code only.",
-      "version": "1.2.0",
+      "description": "Claude Code mod: a scene behind the conversation in the desktop app, with a matching dark color theme. Thirty-one themes: F1 (Mercedes #12, Ferrari #44), travel (space shuttle, Mt Fuji, Paris, Rome, Swiss Alps, Tokyo), places (New York, London, Santorini, northern lights, Netherlands), cozy (rainy café, cabin library, underwater reef, deep space), retro (Matrix, retro 80s, Windows XP, Windows 98, Macintosh, Linux), retro tech (pixel arcade, vaporwave, blueprint, DOS) and holidays (three Christmas, New Year's Eve), switched from a picker above the chat box or /backdrops:<name>. Claude Code only.",
+      "version": "1.3.0",
       "category": "productivity",
       "keywords": [
         "backdrop",
@@ -146,6 +146,7 @@
         "f1",
         "travel",
         "retro",
+        "cozy",
         "christmas",
         "mod"
       ]

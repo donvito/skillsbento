@@ -186,12 +186,12 @@ def christmas_village():
     def deer(x, y):
         return (f'<path d="M{x} {y} q14 -8 30 -2 l8 -14 l4 2 l-6 14 q6 4 2 10 l-6 18 h-4 l3 -16 h-20 l-4 16 h-4 l2 -18 q-8 -4 -5 -10Z" fill="#0b1426"/>'
                 f'<path d="M{x + 38} {y - 16} l-4 -10 l-6 -2 M{x + 38} {y - 16} l4 -10 l6 -2" stroke="#0b1426" stroke-width="2.5" fill="none"/>')
-    sleigh = ('<g class="R" transform="translate(-60 0)">'
+    sleigh = ('<g class="R"><g transform="translate(-60 0)">'
               + "".join(deer(1150 + i * 58, 205 - i * 10) for i in range(4))
               + '<path d="M1150 215 L1100 228" stroke="#0b1426" stroke-width="1.5"/>'
               '<path d="M1030 222 h70 q16 0 16 -18 v-10 h-14 v8 h-60 q-20 -8 -26 -26 h-10 q2 30 24 46Z M1024 236 h86 q16 0 20 -12" '
               'fill="#0b1426" stroke="#0b1426" stroke-width="3"/><circle cx="1060" cy="190" r="12" fill="#0b1426"/>'
-              '<path d="M1048 196 q12 -26 26 0Z" fill="#0b1426"/></g>')
+              '<path d="M1048 196 q12 -26 26 0Z" fill="#0b1426"/></g></g>')
     snow_ground = ('<path d="M0 820 C300 790 600 810 800 830 C1000 850 1300 800 1600 820 V1000 H0Z" fill="url(#snow)"/>'
                    + "".join(f'<circle cx="{r.uniform(0, 1600):.0f}" cy="{r.uniform(0, 1000):.0f}" r="{r.uniform(.8, 3):.1f}" fill="#fff" opacity="{r.uniform(.4, .9):.2f}"/>'
                              for _ in range(150)))

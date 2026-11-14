@@ -13,6 +13,20 @@ import { LINUX } from './scenes/linux'
 import { CHRISTMAS_FIREPLACE } from './scenes/christmas-fireplace'
 import { CHRISTMAS_VILLAGE } from './scenes/christmas-village'
 import { CHRISTMAS_SNOWGLOBE } from './scenes/christmas-snowglobe'
+import { NEW_YORK } from './scenes/new-york'
+import { LONDON } from './scenes/london'
+import { SANTORINI } from './scenes/santorini'
+import { NORTHERN_LIGHTS } from './scenes/northern-lights'
+import { NEW_YEAR } from './scenes/new-year'
+import { RAINY_CAFE } from './scenes/rainy-cafe'
+import { CABIN_LIBRARY } from './scenes/cabin-library'
+import { UNDERWATER_REEF } from './scenes/underwater-reef'
+import { DEEP_SPACE } from './scenes/deep-space'
+import { PIXEL_ARCADE } from './scenes/pixel-arcade'
+import { VAPORWAVE } from './scenes/vaporwave'
+import { BLUEPRINT } from './scenes/blueprint'
+import { DOS_PROMPT } from './scenes/dos-prompt'
+import { NETHERLANDS } from './scenes/netherlands'
 import { MT_FUJI } from './scenes/mt-fuji'
 import { PARIS } from './scenes/paris'
 import { ROME } from './scenes/rome'
@@ -57,6 +71,20 @@ const PICKER: { value: Choice; label: string }[] = [
   { value: 'xmasFire', label: 'Christmas fireplace' },
   { value: 'xmasVillage', label: 'Christmas village' },
   { value: 'xmasGlobe', label: 'Christmas snow globe' },
+  { value: 'nyc', label: 'New York' },
+  { value: 'london', label: 'London' },
+  { value: 'santorini', label: 'Santorini' },
+  { value: 'aurora', label: 'Northern lights' },
+  { value: 'newyear', label: "New Year's Eve" },
+  { value: 'cafe', label: 'Rainy café' },
+  { value: 'library', label: 'Cabin library' },
+  { value: 'reef', label: 'Underwater reef' },
+  { value: 'deepspace', label: 'Deep space' },
+  { value: 'arcade', label: 'Pixel arcade' },
+  { value: 'vapor', label: 'Vaporwave' },
+  { value: 'blueprint', label: 'Blueprint' },
+  { value: 'dos', label: 'DOS prompt' },
+  { value: 'holland', label: 'Netherlands' },
 ]
 
 const THEMES: Record<Theme, { look: ThemeSetArgs; title: string }> = {
@@ -77,6 +105,20 @@ const THEMES: Record<Theme, { look: ThemeSetArgs; title: string }> = {
   xmasFire: { look: TRAVEL_LOOKS.xmasFire, title: 'Christmas fireplace' },
   xmasVillage: { look: TRAVEL_LOOKS.xmasVillage, title: 'Christmas village' },
   xmasGlobe: { look: TRAVEL_LOOKS.xmasGlobe, title: 'Christmas snow globe' },
+  nyc: { look: TRAVEL_LOOKS.nyc, title: 'New York' },
+  london: { look: TRAVEL_LOOKS.london, title: 'London' },
+  santorini: { look: TRAVEL_LOOKS.santorini, title: 'Santorini' },
+  aurora: { look: TRAVEL_LOOKS.aurora, title: 'Northern lights' },
+  newyear: { look: TRAVEL_LOOKS.newyear, title: "New Year's Eve" },
+  cafe: { look: TRAVEL_LOOKS.cafe, title: 'Rainy café' },
+  library: { look: TRAVEL_LOOKS.library, title: 'Cabin library' },
+  reef: { look: TRAVEL_LOOKS.reef, title: 'Underwater reef' },
+  deepspace: { look: TRAVEL_LOOKS.deepspace, title: 'Deep space' },
+  arcade: { look: TRAVEL_LOOKS.arcade, title: 'Pixel arcade' },
+  vapor: { look: TRAVEL_LOOKS.vapor, title: 'Vaporwave' },
+  blueprint: { look: TRAVEL_LOOKS.blueprint, title: 'Blueprint' },
+  dos: { look: TRAVEL_LOOKS.dos, title: 'DOS prompt' },
+  holland: { look: TRAVEL_LOOKS.holland, title: 'Netherlands' },
 }
 
 // Every scene is vector only; isInteractive lets its CSS animation run.
@@ -104,6 +146,20 @@ const DRAWINGS: Record<string, { source: string; alt: string }> = {
   [TRAVEL_SCENES.xmasFire]: { source: CHRISTMAS_FIREPLACE, alt: 'A cosy room with a crackling fire, stockings, a decorated Christmas tree and presents' },
   [TRAVEL_SCENES.xmasVillage]: { source: CHRISTMAS_VILLAGE, alt: 'A snowy village at night with string lights and a sleigh crossing the moon' },
   [TRAVEL_SCENES.xmasGlobe]: { source: CHRISTMAS_SNOWGLOBE, alt: 'A snow globe with a little house and tree, soft festive lights and hanging ornaments' },
+  [TRAVEL_SCENES.nyc]: { source: NEW_YORK, alt: 'The Manhattan skyline at night with the Empire State Building lit' },
+  [TRAVEL_SCENES.london]: { source: LONDON, alt: 'Big Ben and Westminster in the rain, with a red double-decker bus on the bridge' },
+  [TRAVEL_SCENES.santorini]: { source: SANTORINI, alt: 'White houses and blue domes on Santorini cliffs above the sea at sunset' },
+  [TRAVEL_SCENES.aurora]: { source: NORTHERN_LIGHTS, alt: 'A red cabin by a fjord under a big green aurora' },
+  [TRAVEL_SCENES.newyear]: { source: NEW_YEAR, alt: "Fireworks and confetti over a city skyline on New Year's Eve" },
+  [TRAVEL_SCENES.cafe]: { source: RAINY_CAFE, alt: 'Rain on a café window with a steaming cup and warm city lights outside' },
+  [TRAVEL_SCENES.library]: { source: CABIN_LIBRARY, alt: 'A cosy cabin library with bookshelves, an armchair, a sleeping cat and snow at the window' },
+  [TRAVEL_SCENES.reef]: { source: UNDERWATER_REEF, alt: 'A coral reef underwater with fish, a sea turtle and light rays from above' },
+  [TRAVEL_SCENES.deepspace]: { source: DEEP_SPACE, alt: 'A colourful nebula, a ringed planet and distant spiral galaxies in deep space' },
+  [TRAVEL_SCENES.arcade]: { source: PIXEL_ARCADE, alt: 'An original 8-bit space shooter on a CRT screen with scanlines' },
+  [TRAVEL_SCENES.vapor]: { source: VAPORWAVE, alt: 'Pastel twilight vaporwave: a checkerboard floor, a retro program window, a leaping dolphin and a marble bust' },
+  [TRAVEL_SCENES.blueprint]: { source: BLUEPRINT, alt: 'Technical drawings of a rocket and a robot on blue blueprint grid paper' },
+  [TRAVEL_SCENES.dos]: { source: DOS_PROMPT, alt: 'A blue text-mode screen with ANSI-style block art of a sunset island and a DOS-style prompt' },
+  [TRAVEL_SCENES.holland]: { source: NETHERLANDS, alt: 'Dutch tulip fields and a canal at golden hour, with windmills and bicycles' },
 }
 
 const isChoice = (value: unknown): value is Choice =>
@@ -202,6 +258,62 @@ export const register: Register = on => {
       description: 'Backdrop: a snow globe with a little house and tree, and festive lights',
     })
     await $.command.register({
+      name: 'backdrop-new-york',
+      description: 'Backdrop: the Manhattan skyline at night, with the Empire State Building lit',
+    })
+    await $.command.register({
+      name: 'backdrop-london',
+      description: 'Backdrop: Big Ben and Westminster in the rain, with a red double-decker bus',
+    })
+    await $.command.register({
+      name: 'backdrop-santorini',
+      description: 'Backdrop: white houses and blue domes above the sea at sunset',
+    })
+    await $.command.register({
+      name: 'backdrop-northern-lights',
+      description: 'Backdrop: a red cabin by a fjord under a big green aurora',
+    })
+    await $.command.register({
+      name: 'backdrop-new-year',
+      description: 'Backdrop: fireworks and confetti over a city skyline',
+    })
+    await $.command.register({
+      name: 'backdrop-rainy-cafe',
+      description: 'Backdrop: rain on a café window, a steaming cup and warm city lights',
+    })
+    await $.command.register({
+      name: 'backdrop-cabin-library',
+      description: 'Backdrop: bookshelves, an armchair with a sleeping cat, snow at the window',
+    })
+    await $.command.register({
+      name: 'backdrop-underwater-reef',
+      description: 'Backdrop: coral, fish, a sea turtle and light rays underwater',
+    })
+    await $.command.register({
+      name: 'backdrop-deep-space',
+      description: 'Backdrop: a colourful nebula, a ringed planet and distant galaxies',
+    })
+    await $.command.register({
+      name: 'backdrop-pixel-arcade',
+      description: 'Backdrop: an original 8-bit space shooter on a CRT screen',
+    })
+    await $.command.register({
+      name: 'backdrop-vaporwave',
+      description: 'Backdrop: a pastel twilight, checkerboard floor, a retro window, a dolphin and a marble bust',
+    })
+    await $.command.register({
+      name: 'backdrop-blueprint',
+      description: 'Backdrop: technical drawings of a rocket and a robot on blue grid paper',
+    })
+    await $.command.register({
+      name: 'backdrop-dos-prompt',
+      description: 'Backdrop: a blue text-mode screen with ANSI block art and a prompt',
+    })
+    await $.command.register({
+      name: 'backdrop-netherlands',
+      description: 'Backdrop: tulip fields, a canal, windmills and bicycles at golden hour',
+    })
+    await $.command.register({
       name: 'backdrop-off',
       description: 'Remove the backdrop and go back to the default Claude Code look',
     })
@@ -240,6 +352,20 @@ export const register: Register = on => {
   on('command.run', { command: 'backdrop-christmas-fireplace' }, $ => apply($, 'xmasFire'))
   on('command.run', { command: 'backdrop-christmas-village' }, $ => apply($, 'xmasVillage'))
   on('command.run', { command: 'backdrop-christmas-snowglobe' }, $ => apply($, 'xmasGlobe'))
+  on('command.run', { command: 'backdrop-new-york' }, $ => apply($, 'nyc'))
+  on('command.run', { command: 'backdrop-london' }, $ => apply($, 'london'))
+  on('command.run', { command: 'backdrop-santorini' }, $ => apply($, 'santorini'))
+  on('command.run', { command: 'backdrop-northern-lights' }, $ => apply($, 'aurora'))
+  on('command.run', { command: 'backdrop-new-year' }, $ => apply($, 'newyear'))
+  on('command.run', { command: 'backdrop-rainy-cafe' }, $ => apply($, 'cafe'))
+  on('command.run', { command: 'backdrop-cabin-library' }, $ => apply($, 'library'))
+  on('command.run', { command: 'backdrop-underwater-reef' }, $ => apply($, 'reef'))
+  on('command.run', { command: 'backdrop-deep-space' }, $ => apply($, 'deepspace'))
+  on('command.run', { command: 'backdrop-pixel-arcade' }, $ => apply($, 'arcade'))
+  on('command.run', { command: 'backdrop-vaporwave' }, $ => apply($, 'vapor'))
+  on('command.run', { command: 'backdrop-blueprint' }, $ => apply($, 'blueprint'))
+  on('command.run', { command: 'backdrop-dos-prompt' }, $ => apply($, 'dos'))
+  on('command.run', { command: 'backdrop-netherlands' }, $ => apply($, 'holland'))
   on('command.run', { command: 'backdrop-off' }, $ => apply($, 'plain'))
   // The same commands from the plugin's commands/ files, which the desktop
   // app's slash menu lists as /backdrops:<name>; answered here, never by
@@ -261,6 +387,20 @@ export const register: Register = on => {
   on('command.run', { command: 'backdrops:christmas-fireplace' }, $ => apply($, 'xmasFire'))
   on('command.run', { command: 'backdrops:christmas-village' }, $ => apply($, 'xmasVillage'))
   on('command.run', { command: 'backdrops:christmas-snowglobe' }, $ => apply($, 'xmasGlobe'))
+  on('command.run', { command: 'backdrops:new-york' }, $ => apply($, 'nyc'))
+  on('command.run', { command: 'backdrops:london' }, $ => apply($, 'london'))
+  on('command.run', { command: 'backdrops:santorini' }, $ => apply($, 'santorini'))
+  on('command.run', { command: 'backdrops:northern-lights' }, $ => apply($, 'aurora'))
+  on('command.run', { command: 'backdrops:new-year' }, $ => apply($, 'newyear'))
+  on('command.run', { command: 'backdrops:rainy-cafe' }, $ => apply($, 'cafe'))
+  on('command.run', { command: 'backdrops:cabin-library' }, $ => apply($, 'library'))
+  on('command.run', { command: 'backdrops:underwater-reef' }, $ => apply($, 'reef'))
+  on('command.run', { command: 'backdrops:deep-space' }, $ => apply($, 'deepspace'))
+  on('command.run', { command: 'backdrops:pixel-arcade' }, $ => apply($, 'arcade'))
+  on('command.run', { command: 'backdrops:vaporwave' }, $ => apply($, 'vapor'))
+  on('command.run', { command: 'backdrops:blueprint' }, $ => apply($, 'blueprint'))
+  on('command.run', { command: 'backdrops:dos-prompt' }, $ => apply($, 'dos'))
+  on('command.run', { command: 'backdrops:netherlands' }, $ => apply($, 'holland'))
   on('command.run', { command: 'backdrops:off' }, $ => apply($, 'plain'))
 
   // A small picker in the band above the prompt, where backdrops draw (the

@@ -21,14 +21,31 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_travel import H, VEIL, W, lin, rad, rnd, stars, svg  # noqa: E402
 from smil import timeshift  # noqa: E402
 
-def edge_css():
-    """.T (top bars) and .B (bottom bars) move into the visible part of a wide box."""
+def pinned(scene, edge):
+    """Pin a scene to its bottom (a taskbar) or top (a menu bar) edge.
+
+    The root is a 1600 x 1000 `slice`: a box wider than 1.6 loses part of its
+    height. Centred, that loss is split between top and bottom, so a bar drawn
+    at an edge floats inside a wide window. Pinned, the whole loss comes off
+    the other edge and the bar stays flush with the window at every width;
+    .T (with a bottom pin) or .B (with a top pin) then moves the items at that
+    other edge into view.
+    """
+    align = "xMidYMax" if edge == "bottom" else "xMidYMin"
     rules = []
-    for lo, hi, a in ((1.6, 1.8, 1.8), (1.8, 2.1, 2.1), (2.1, 2.6, 2.6), (2.6, 9, 3.2)):
-        dy = round((H - W / a) / 2)
+    edges = [round(1.6 + 0.1 * i, 1) for i in range(19)]  # 1.6, 1.7 ... 3.4, then anything wider
+    for lo, hi in list(zip(edges, edges[1:])) + [(edges[-1], 9.0)]:
+        tallest = W / (hi if hi < 9 else 3.4)  # the visible height at the band's widest box
         mq = f"(min-aspect-ratio: {int(lo * 100)}/100)" + (f" and (max-aspect-ratio: {int(hi * 100) - 1}/100)" if hi < 9 else "")
-        rules.append(f"@media {mq}{{.T{{transform:translateY({dy}px)}}.B{{transform:translateY({-dy}px)}}}}")
-    return "".join(rules)
+        if edge == "bottom":
+            # top items drop by the whole crop, so the topmost stays in view
+            rule = f".T{{transform:translateY({round(H - tallest)}px)}}"
+        else:
+            # bottom items (lowest edge near y=880) rise only as far as they must
+            rule = f".B{{transform:translateY({-max(0, round(880 + 20 - tallest))}px)}}"
+        rules.append(f"@media {mq}{{{rule}}}")
+    scene = scene.replace('preserveAspectRatio="xMidYMid slice"', f'preserveAspectRatio="{align} slice"', 1)
+    return scene.replace("</style>", "".join(rules) + "</style>", 1)
 
 
 UI_FONT = "'Tahoma', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
@@ -162,19 +179,20 @@ def windows_xp():
              '<path d="M0 700 C300 600 620 590 880 640 C1120 690 1360 640 1600 600 V1000 H0Z" fill="url(#hillF)"/>'
              + "".join(f'<path d="M{x:.0f} {y:.0f} q6 -10 12 0" stroke="#9be067" stroke-width="2" fill="none" opacity=".35"/>'
                        for x, y in ((r.uniform(0, 1600), r.uniform(700, 940)) for _ in range(120))))
-    icons = ('<g class="L">'
+    icons = ('<g class="T"><g class="L">'
              + monitor_icon(70, 90) + icon_label(70, 140, "Computer")
              + folder_icon(70, 210) + icon_label(70, 258, "Documents")
              + globe_icon(70, 330) + icon_label(70, 378, "Internet")
              + bin_icon(70, 450) + icon_label(70, 500, "Recycle Bin")
-             + '</g>')
-    taskbar = ('<g class="B"><rect y="935" width="1600" height="42" fill="url(#bar)"/>'
-               '<g class="L"><path d="M0 935 H118 Q140 935 140 956 Q140 977 118 977 H0Z" fill="url(#startG)"/>'
-               f'<text x="26" y="964" font-family="{UI_FONT}" font-size="22" font-style="italic" font-weight="700" fill="#fff">start</text></g>'
-               '<g class="R"><rect x="1470" y="935" width="130" height="42" fill="url(#tray)"/>'
-               f'<text x="1580" y="962" text-anchor="end" font-family="{UI_FONT}" font-size="15" fill="#fff">10:42 AM</text></g></g>')
+             + '</g></g>')
+    # flush with the bottom edge: the scene is pinned there (see pinned)
+    taskbar = ('<rect y="958" width="1600" height="42" fill="url(#bar)"/>'
+               '<g class="L"><path d="M0 958 H118 Q140 958 140 979 Q140 1000 118 1000 H0Z" fill="url(#startG)"/>'
+               f'<text x="26" y="987" font-family="{UI_FONT}" font-size="22" font-style="italic" font-weight="700" fill="#fff">start</text></g>'
+               '<g class="R"><rect x="1470" y="958" width="130" height="42" fill="url(#tray)"/>'
+               f'<text x="1580" y="985" text-anchor="end" font-family="{UI_FONT}" font-size="15" fill="#fff">10:42 AM</text></g>')
     body = (f'<rect width="{W}" height="{H}" fill="url(#sky)"/>{clouds}{hills}{icons}{taskbar}')
-    return svg(defs, body, edge_css(), "Rolling green hills under a blue sky with desktop icons and a blue taskbar")
+    return pinned(svg(defs, body, "", "Rolling green hills under a blue sky with desktop icons and a blue taskbar"), "bottom")
 
 
 # ----------------------------------------------------------------- windows 98
@@ -188,12 +206,12 @@ def bevel(x, y, w, h, raised=True):
 def windows_98():
     defs = (lin("title", [(0, "#000080"), (1, "#1084d0")], x2=1, y2=0)
             + lin("teal", [(0, "#007b7b"), (1, "#006666")]))
-    icons = ('<g class="L">'
+    icons = ('<g class="T"><g class="L">'
              + monitor_icon(64, 90, .9, "#008080") + icon_label(64, 136, "Computer", size=14)
              + folder_icon(64, 200, .9) + icon_label(64, 244, "Documents", size=14)
              + globe_icon(64, 312, .9) + icon_label(64, 356, "Internet", size=14)
              + bin_icon(64, 424, .9) + icon_label(64, 470, "Recycle Bin", size=14)
-             + '</g>')
+             + '</g></g>')
     wx, wy, ww, wh = 1170, 150, 400, 330
     lines = ["Claude Code", "", "Backdrop: windows-98", "", "Tip: pick another theme", "from the Backdrop menu", "above the chat box.", "", "C:\\>_"]
     text = "".join(f'<text x="{wx + 18}" y="{wy + 92 + i * 22}" font-family="\'Courier New\', monospace" font-size="15" fill="#000">{t}</text>'
@@ -209,14 +227,15 @@ def windows_98():
                         for i, m in enumerate(["File", "Edit", "Search", "Help"]))
               + f'<rect x="{wx + 8}" y="{wy + 62}" width="{ww - 16}" height="{wh - 70}" fill="#fff" stroke="#808080" stroke-width="2"/>'
               + text + '</g>')
-    taskbar = ('<g class="B"><rect y="938" width="1600" height="40" fill="#c0c0c0"/><path d="M0 939 H1600" stroke="#fff" stroke-width="2"/>'
-               '<g class="L">' + bevel(4, 943, 92, 30)
-               + monitor_icon(24, 959, .38, "#008080")
-               + f'<text x="40" y="964" font-family="{UI_FONT}" font-size="15" font-weight="700" fill="#000">Start</text></g>'
-               '<g class="R">' + bevel(1490, 943, 104, 30, raised=False)
-               + f'<text x="1542" y="964" text-anchor="middle" font-family="{UI_FONT}" font-size="14" fill="#000">10:42 PM</text></g></g>')
+    # flush with the bottom edge: the scene is pinned there (see pinned)
+    taskbar = ('<rect y="960" width="1600" height="40" fill="#c0c0c0"/><path d="M0 961 H1600" stroke="#fff" stroke-width="2"/>'
+               '<g class="L">' + bevel(4, 965, 92, 30)
+               + monitor_icon(24, 981, .38, "#008080")
+               + f'<text x="40" y="986" font-family="{UI_FONT}" font-size="15" font-weight="700" fill="#000">Start</text></g>'
+               '<g class="R">' + bevel(1490, 965, 104, 30, raised=False)
+               + f'<text x="1542" y="986" text-anchor="middle" font-family="{UI_FONT}" font-size="14" fill="#000">10:42 PM</text></g>')
     body = f'<rect width="{W}" height="{H}" fill="url(#teal)"/>{icons}{window}{taskbar}'
-    return svg(defs, body, edge_css(), "A teal desktop with icons, a classic grey window and taskbar")
+    return pinned(svg(defs, body, "", "A teal desktop with icons, a classic grey window and taskbar"), "bottom")
 
 
 # ----------------------------------------------------------- macintosh retro
@@ -226,7 +245,8 @@ def macintosh_retro():
             '<rect x="2" y="2" width="2" height="2" fill="#6a6a6a"/></pattern>'
             '<pattern id="stripes" width="4" height="4" patternUnits="userSpaceOnUse">'
             '<rect width="4" height="4" fill="#fff"/><rect y="1" width="4" height="1.4" fill="#000"/></pattern>')
-    menubar = ('<g class="T"><rect y="-40" width="1600" height="70" fill="#fff"/><path d="M0 30 H1600" stroke="#000" stroke-width="2"/>'
+    # flush with the top edge: the scene is pinned there (see pinned)
+    menubar = ('<g><rect width="1600" height="30" fill="#fff"/><path d="M0 30 H1600" stroke="#000" stroke-width="2"/>'
                '<g class="L"><path d="M30 8 l6 7 l-6 7 l-6 -7Z" fill="#000"/>'
                + "".join(f'<text x="{60 + i * 66}" y="21" font-family="{MAC_FONT}" font-size="16" font-weight="700" fill="#000">{m}</text>'
                          for i, m in enumerate(["File", "Edit", "View", "Special"]))
@@ -251,26 +271,26 @@ def macintosh_retro():
     inner = (doc_icon(110, 170, "Read Me") + doc_icon(200, 170, "Notes") + doc_icon(290, 170, "Ideas")
              + f'<text x="60" y="270" font-family="{MAC_FONT}" font-size="13" fill="#000">3 items     12K in disk</text>')
     window = '<g class="L">' + mac_window(40, 100, 330, 200, "Documents", inner) + '</g>'
-    disk = ('<g class="T"><g class="R"><rect x="1480" y="80" width="64" height="40" rx="3" fill="#fff" stroke="#000" stroke-width="2"/>'
+    disk = ('<g><g class="R"><rect x="1480" y="80" width="64" height="40" rx="3" fill="#fff" stroke="#000" stroke-width="2"/>'
             '<rect x="1490" y="106" width="12" height="4" fill="#000"/><circle cx="1530" cy="108" r="3" fill="#000"/>'
             '<rect x="1458" y="128" width="108" height="20" fill="#000"/>'
             f'<text x="1512" y="143" text-anchor="middle" font-family="{MAC_FONT}" font-size="13" fill="#fff">Hard Disk</text></g></g>'
-            '<g class="R">'
+            '<g class="B"><g class="R">'
             '<path d="M1490 780 h44 l-4 64 h-36Z" fill="#fff" stroke="#000" stroke-width="2"/>'
             '<rect x="1484" y="770" width="56" height="10" fill="#fff" stroke="#000" stroke-width="2"/>'
             '<path d="M1502 792 v44 M1512 792 v44 M1522 792 v44" stroke="#000" stroke-width="2"/>'
             '<rect x="1482" y="852" width="60" height="20" fill="#fff"/>'
-            f'<text x="1512" y="867" text-anchor="middle" font-family="{MAC_FONT}" font-size="13" fill="#000">Trash</text></g>')
-    computer = ('<g class="L" transform="translate(110 560)">'
+            f'<text x="1512" y="867" text-anchor="middle" font-family="{MAC_FONT}" font-size="13" fill="#000">Trash</text></g></g>')
+    computer = ('<g class="B"><g class="L"><g transform="translate(110 560)">'
                 '<path d="M0 0 h200 l10 240 h-220Z" fill="#d8d0b8" stroke="#000" stroke-width="2"/>'
                 '<rect x="22" y="26" width="156" height="118" rx="10" fill="#2b2b2b" stroke="#000" stroke-width="2"/>'
                 '<rect x="34" y="38" width="132" height="94" rx="6" fill="#eaeaea"/>'
                 '<rect x="44" y="50" width="70" height="44" fill="#fff" stroke="#000"/><rect x="45" y="51" width="68" height="6" fill="url(#stripes)"/>'
                 '<rect x="90" y="80" width="64" height="40" fill="#fff" stroke="#000"/><rect x="91" y="81" width="62" height="6" fill="url(#stripes)"/>'
                 '<rect x="120" y="170" width="64" height="8" rx="2" fill="#2b2b2b"/>'
-                '<rect x="-14" y="240" width="228" height="16" fill="#c9c0a6" stroke="#000" stroke-width="2"/></g>')
+                '<rect x="-14" y="240" width="228" height="16" fill="#c9c0a6" stroke="#000" stroke-width="2"/></g></g></g>')
     body = f'<rect width="{W}" height="{H}" fill="url(#dither)"/>{menubar}{window}{computer}{disk}'
-    return svg(defs, body, edge_css(), "A dithered grey desktop with a menu bar, a pinstriped window and disk icons")
+    return pinned(svg(defs, body, "", "A dithered grey desktop with a menu bar, a pinstriped window and disk icons"), "top")
 
 
 # ---------------------------------------------------------------------- linux
