@@ -1,0 +1,22 @@
+{
+  "name": "backdrops",
+  "description": "Claude Code mod: a scene behind the conversation in the desktop app, with a matching dark color theme. Fourteen themes: two F1 (Kimi Antonelli's Mercedes #12, Lewis Hamilton's Ferrari #44), six travel (space shuttle, Mt Fuji, Paris, Rome, Swiss Alps, Tokyo Shibuya) and six retro (Matrix, retro 80s, Windows XP, Windows 98, Macintosh, Linux), switched from a picker above the chat box or /backdrops:<name>.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Melvin Dave Vivas",
+    "url": "https://github.com/donvito"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/donvito/skillsbento",
+  "repository": "https://github.com/donvito/skillsbento",
+  "keywords": [
+    "backdrop",
+    "theme",
+    "wallpaper",
+    "f1",
+    "travel",
+    "retro",
+    "mod"
+  ],
+  "types": "./types/index.d.ts"
+}
