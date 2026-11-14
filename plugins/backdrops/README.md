@@ -1,8 +1,8 @@
 # backdrops
 
-A Claude Code mod that puts a scene behind the conversation in the Claude desktop app, with a matching dark color theme. It has fourteen themes: two Formula 1, six travel scenes and six retro looks. Switch between them with a picker above the chat box or a slash command such as `/backdrops:paris`.
+A Claude Code mod that puts a scene behind the conversation in the Claude desktop app, with a matching dark color theme. It has seventeen themes: two Formula 1, six travel scenes, six retro looks and three for Christmas. Switch between them with a picker above the chat box or a slash command such as `/backdrops:paris`.
 
-![All fourteen backdrops](preview.jpg)
+![All seventeen backdrops](preview.jpg)
 
 ## Install
 
@@ -33,6 +33,9 @@ Backdrops draw in the Claude desktop and mobile apps. The terminal and IDE exten
 | `/backdrops:windows-98` | A teal desktop with icons, a classic grey Notepad-style window and taskbar |
 | `/backdrops:macintosh-retro` | A dithered grey desktop, a menu bar, a pinstriped window, a beige computer and disk icons |
 | `/backdrops:linux` | A cartoon penguin and its chick on an ice floe under an aurora, beside a terminal window |
+| `/backdrops:christmas-fireplace` | A cosy room: a crackling fire with stockings and candles, a decorated tree with lights, and presents |
+| `/backdrops:christmas-village` | A snowy village at night with string lights, a little church, and a sleigh and reindeer crossing the moon |
+| `/backdrops:christmas-snowglobe` | A snow globe with a little house and lit tree inside, soft festive lights, ornaments and a candy cane |
 | `/backdrops:off` | Removes the backdrop and goes back to the default look |
 
 You can also type them without the prefix as `/backdrop-<name>`, for example `/backdrop-paris` or `/backdrop-off`. Your pick is saved and comes back in new chats until you choose **None** or run `/backdrops:off`.
@@ -67,9 +70,14 @@ python3 tools/build_travel.py hooks/scenes
 python3 tools/build_retro.py hooks/scenes
 ```
 
+```bash
+python3 tools/build_christmas.py hooks/scenes
+```
+
 - `build_scenes.py` draws the two F1 scenes: the driver panel and the top-down car.
 - `build_travel.py` draws the six travel scenes.
 - `build_retro.py` draws the six retro scenes.
+- `build_christmas.py` draws the three Christmas scenes.
 - `smil.py` holds the `var(--t)` time offset both scripts apply.
 - `trace.py` traces a photo to vector shapes. It needs `pip install vtracer`.
 - `build_stills.py` renders the F1 layout with the real photos to full-window JPEGs, for an app version that draws still image backdrops. It needs Google Chrome and ImageMagick.

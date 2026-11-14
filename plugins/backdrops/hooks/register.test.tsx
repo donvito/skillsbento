@@ -89,6 +89,9 @@ const SCENES = [
   'windows-98',
   'macintosh-retro',
   'linux',
+  'christmas-fireplace',
+  'christmas-village',
+  'christmas-snowglobe',
 ] as const
 
 for (const scene of SCENES) {
@@ -138,6 +141,9 @@ const TRAVEL = [
   ['windows-98', 'windows-98', 'win98'],
   ['macintosh-retro', 'macintosh-retro', 'mac'],
   ['linux', 'linux', 'linux'],
+  ['christmas-fireplace', 'christmas-fireplace', 'xmasFire'],
+  ['christmas-village', 'christmas-village', 'xmasVillage'],
+  ['christmas-snowglobe', 'christmas-snowglobe', 'xmasGlobe'],
 ] as const
 
 test('each travel theme switches from its command and its menu entry', async ($, on) => {
