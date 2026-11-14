@@ -10,6 +10,9 @@ import { WINDOWS_XP } from './scenes/windows-xp'
 import { WINDOWS_98 } from './scenes/windows-98'
 import { MACINTOSH_RETRO } from './scenes/macintosh-retro'
 import { LINUX } from './scenes/linux'
+import { CHRISTMAS_FIREPLACE } from './scenes/christmas-fireplace'
+import { CHRISTMAS_VILLAGE } from './scenes/christmas-village'
+import { CHRISTMAS_SNOWGLOBE } from './scenes/christmas-snowglobe'
 import { MT_FUJI } from './scenes/mt-fuji'
 import { PARIS } from './scenes/paris'
 import { ROME } from './scenes/rome'
@@ -51,6 +54,9 @@ const PICKER: { value: Choice; label: string }[] = [
   { value: 'win98', label: 'Windows 98' },
   { value: 'mac', label: 'Macintosh retro' },
   { value: 'linux', label: 'Linux' },
+  { value: 'xmasFire', label: 'Christmas fireplace' },
+  { value: 'xmasVillage', label: 'Christmas village' },
+  { value: 'xmasGlobe', label: 'Christmas snow globe' },
 ]
 
 const THEMES: Record<Theme, { look: ThemeSetArgs; title: string }> = {
@@ -68,6 +74,9 @@ const THEMES: Record<Theme, { look: ThemeSetArgs; title: string }> = {
   win98: { look: TRAVEL_LOOKS.win98, title: 'Windows 98' },
   mac: { look: TRAVEL_LOOKS.mac, title: 'Macintosh retro' },
   linux: { look: TRAVEL_LOOKS.linux, title: 'Linux' },
+  xmasFire: { look: TRAVEL_LOOKS.xmasFire, title: 'Christmas fireplace' },
+  xmasVillage: { look: TRAVEL_LOOKS.xmasVillage, title: 'Christmas village' },
+  xmasGlobe: { look: TRAVEL_LOOKS.xmasGlobe, title: 'Christmas snow globe' },
 }
 
 // Every scene is vector only; isInteractive lets its CSS animation run.
@@ -92,6 +101,9 @@ const DRAWINGS: Record<string, { source: string; alt: string }> = {
   [TRAVEL_SCENES.win98]: { source: WINDOWS_98, alt: 'A teal desktop with icons, a classic grey window and taskbar' },
   [TRAVEL_SCENES.mac]: { source: MACINTOSH_RETRO, alt: 'A dithered grey desktop with a menu bar, a pinstriped window and disk icons' },
   [TRAVEL_SCENES.linux]: { source: LINUX, alt: 'A cartoon penguin on an ice floe under an aurora, beside a terminal window' },
+  [TRAVEL_SCENES.xmasFire]: { source: CHRISTMAS_FIREPLACE, alt: 'A cosy room with a crackling fire, stockings, a decorated Christmas tree and presents' },
+  [TRAVEL_SCENES.xmasVillage]: { source: CHRISTMAS_VILLAGE, alt: 'A snowy village at night with string lights and a sleigh crossing the moon' },
+  [TRAVEL_SCENES.xmasGlobe]: { source: CHRISTMAS_SNOWGLOBE, alt: 'A snow globe with a little house and tree, soft festive lights and hanging ornaments' },
 }
 
 const isChoice = (value: unknown): value is Choice =>
@@ -178,6 +190,18 @@ export const register: Register = on => {
       description: 'Backdrop: a penguin on an ice floe under an aurora, beside a terminal',
     })
     await $.command.register({
+      name: 'backdrop-christmas-fireplace',
+      description: 'Backdrop: a cosy fire with stockings, a decorated tree and presents',
+    })
+    await $.command.register({
+      name: 'backdrop-christmas-village',
+      description: 'Backdrop: a snowy village at night with a sleigh crossing the moon',
+    })
+    await $.command.register({
+      name: 'backdrop-christmas-snowglobe',
+      description: 'Backdrop: a snow globe with a little house and tree, and festive lights',
+    })
+    await $.command.register({
       name: 'backdrop-off',
       description: 'Remove the backdrop and go back to the default Claude Code look',
     })
@@ -213,6 +237,9 @@ export const register: Register = on => {
   on('command.run', { command: 'backdrop-windows-98' }, $ => apply($, 'win98'))
   on('command.run', { command: 'backdrop-macintosh-retro' }, $ => apply($, 'mac'))
   on('command.run', { command: 'backdrop-linux' }, $ => apply($, 'linux'))
+  on('command.run', { command: 'backdrop-christmas-fireplace' }, $ => apply($, 'xmasFire'))
+  on('command.run', { command: 'backdrop-christmas-village' }, $ => apply($, 'xmasVillage'))
+  on('command.run', { command: 'backdrop-christmas-snowglobe' }, $ => apply($, 'xmasGlobe'))
   on('command.run', { command: 'backdrop-off' }, $ => apply($, 'plain'))
   // The same commands from the plugin's commands/ files, which the desktop
   // app's slash menu lists as /backdrops:<name>; answered here, never by
@@ -231,6 +258,9 @@ export const register: Register = on => {
   on('command.run', { command: 'backdrops:windows-98' }, $ => apply($, 'win98'))
   on('command.run', { command: 'backdrops:macintosh-retro' }, $ => apply($, 'mac'))
   on('command.run', { command: 'backdrops:linux' }, $ => apply($, 'linux'))
+  on('command.run', { command: 'backdrops:christmas-fireplace' }, $ => apply($, 'xmasFire'))
+  on('command.run', { command: 'backdrops:christmas-village' }, $ => apply($, 'xmasVillage'))
+  on('command.run', { command: 'backdrops:christmas-snowglobe' }, $ => apply($, 'xmasGlobe'))
   on('command.run', { command: 'backdrops:off' }, $ => apply($, 'plain'))
 
   // A small picker in the band above the prompt, where backdrops draw (the

@@ -117,6 +117,30 @@ const LOOKS = {
     surfaces: ['#070b12', '#0d131c', '#121a25', '#17212e'],
     text: ['#e8eef5', '#c0ccd8', '#8fa0b3'],
   },
+  xmasFire: {
+    label: 'Christmas fireplace',
+    scene: 'christmas-fireplace',
+    accent: '#e8b04a',
+    pro: '#6fcf7a',
+    surfaces: ['#140808', '#1c0d0d', '#231212', '#2a1616'],
+    text: ['#f8efe9', '#dcc9c0', '#ad978d'],
+  },
+  xmasVillage: {
+    label: 'Christmas village',
+    scene: 'christmas-village',
+    accent: '#ffcc66',
+    pro: '#9ad1ff',
+    surfaces: ['#060b1c', '#0c1428', '#111b32', '#16223c'],
+    text: ['#eef3ff', '#c6d1ea', '#95a3c4'],
+  },
+  xmasGlobe: {
+    label: 'Christmas snow globe',
+    scene: 'christmas-snowglobe',
+    accent: '#3fbf8f',
+    pro: '#ff8ad8',
+    surfaces: ['#051014', '#0a181d', '#0f2026', '#13282f'],
+    text: ['#ecf7f6', '#c3dbd8', '#93aeaa'],
+  },
 } satisfies Record<string, Look>
 
 export type TravelTheme = keyof typeof LOOKS
