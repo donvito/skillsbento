@@ -92,6 +92,20 @@ const SCENES = [
   'christmas-fireplace',
   'christmas-village',
   'christmas-snowglobe',
+  'new-york',
+  'london',
+  'santorini',
+  'northern-lights',
+  'new-year',
+  'rainy-cafe',
+  'cabin-library',
+  'underwater-reef',
+  'deep-space',
+  'pixel-arcade',
+  'vaporwave',
+  'blueprint',
+  'dos-prompt',
+  'netherlands',
 ] as const
 
 for (const scene of SCENES) {
@@ -144,6 +158,20 @@ const TRAVEL = [
   ['christmas-fireplace', 'christmas-fireplace', 'xmasFire'],
   ['christmas-village', 'christmas-village', 'xmasVillage'],
   ['christmas-snowglobe', 'christmas-snowglobe', 'xmasGlobe'],
+  ['new-york', 'new-york', 'nyc'],
+  ['london', 'london', 'london'],
+  ['santorini', 'santorini', 'santorini'],
+  ['northern-lights', 'northern-lights', 'aurora'],
+  ['new-year', 'new-year', 'newyear'],
+  ['rainy-cafe', 'rainy-cafe', 'cafe'],
+  ['cabin-library', 'cabin-library', 'library'],
+  ['underwater-reef', 'underwater-reef', 'reef'],
+  ['deep-space', 'deep-space', 'deepspace'],
+  ['pixel-arcade', 'pixel-arcade', 'arcade'],
+  ['vaporwave', 'vaporwave', 'vapor'],
+  ['blueprint', 'blueprint', 'blueprint'],
+  ['dos-prompt', 'dos-prompt', 'dos'],
+  ['netherlands', 'netherlands', 'holland'],
 ] as const
 
 test('each travel theme switches from its command and its menu entry', async ($, on) => {
